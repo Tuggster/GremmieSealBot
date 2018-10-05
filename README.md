@@ -11,11 +11,15 @@ We've got some commands for you to use!
   !PatchNotes - Gets the latest patchnotes!
 
   !SetProperty (Admin Only!) - Args: Property, and Value. - Sets the value of a property.
+  
   !GetProperties (Admin Only) - Gets a list of all server properties, and their values.
+  
   !GremmieHelp - Sends a list of commands!
+  
   !GremmieBugReport - Args: Message - Sends a message to me, please only send bug reports.
 
   !GremmieInfo - Gets info about the bot!
+  
   !TopStats (Beta must be enabled!) - Gets the statistics for the top 3 users.
 
   !AddCustomSeal (Admin Only!) - Adds a custom seal to the custom seal list. Here is a handy dandy formatting guide! SLOT NUMBER | IMAGE LINK | SEAL PRICE -- You must include the "|"s, they seperate arguments.
