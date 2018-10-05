@@ -29,3 +29,6 @@ We've got some commands for you to use!
   !SealCatalog (Or !GremmieCatalog!) - Shows the available GremmieSeals.
 
   !SetSeal - Args: Seal ID (The seal you wish to select.) - Use this command to select a seal from the catalog. You must be awarded seals to purchase more seals.
+
+To add GSB to your discord server, follow this link!
+https://discordapp.com/oauth2/authorize?client_id=397089441404944394&scope=bot&permissions=0
