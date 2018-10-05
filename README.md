@@ -1,6 +1,5 @@
 # GremmieSealBot
-<<<<<<< HEAD
-=======
+
 A nice discord bot to dispense GremmieSeals
 
 We've got some commands for you to use!
