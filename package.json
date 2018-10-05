@@ -1,0 +1,36 @@
+{
+  "name": "emojienforcer",
+  "version": "1.0.0",
+  "description": "Enforces those emojis!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tuggi",
+  "license": "MIT",
+  "dependencies": {
+    "arraylist": "^0.1.0",
+    "bufferutil": "^3.0.5",
+    "discord.js": "^11.3.2",
+    "enmap": "^2.6.3",
+    "enmap-sqlite": "^2.0.3",
+    "fluent-ffmpeg": "^2.1.2",
+    "fortnite": "^3.0.1",
+    "html-entities": "^1.2.1",
+    "libui-node": "^0.2.1",
+    "m3u8stream": "^0.2.2",
+    "miniget": "^1.2.0",
+    "node-gyp": "^3.8.0",
+    "node-opus": "^0.2.9",
+    "opusscript": "0.0.6",
+    "prompt": "^1.0.0",
+    "sax": "^1.2.4",
+    "sqlite": "^2.9.2",
+    "sqlite3": "^4.0.2",
+    "youtube-audio-player": "^1.0.0",
+    "youtube-audio-stream": "0.0.50",
+    "youtube-info": "^1.2.0",
+    "youtube-search": "^1.1.1",
+    "ytdl-core": "^0.18.7"
+  }
+}
