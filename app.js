@@ -64,7 +64,7 @@ function getQueue(message) {
 function playSong(message){
     if (!message.member.voiceChannel)
 		message.reply("Please join a voice channel, so the Gremlins know where to blast those tunes!");
-	
+
 	if (!servers[message.guild.id]) servers[message.guild.id] = {
 		queue: []
 	};
@@ -76,19 +76,19 @@ function playSong(message){
 		} catch (e) {
 			message.channel.send("Ouchies, that didn't work.");
 		}
-		
+
 		server.queue.shift();
-	
+
 		server.dispatcher.on("end", function() {
 			if (server.queue[0]) playSong(message);
-			else { 
+			else {
 				message.channel.send("Music is over, the Gremlins are out of here!");
 				connection.disconnect();
 			}
 		});
 	})
-	
-	
+
+
 
 }
 
@@ -104,8 +104,8 @@ function searchfunc(message){
 	  if (!results[0]) {
 		  message.reply("No results found!");
 	  }
-		  
-	  
+
+
       if(err) return console.log(err);
       server.queue.push(results[0].link);
 	  console.log(`Song queued: ${name}`);
@@ -121,22 +121,22 @@ function searchfunc(message){
 client.on("guildBanAdd", (guild, user) => {
 	const defaultChannel = guild.channels.find(`name`,`general`);
 	defaultChannel.send(`${user.username} got banned lol`);
-	
+
 })
 
 client.on("guildCreate", guild => {
 	logAction(`New server joined - ${guild.name}`);
-	
+
 	// Adding a new row to the collection uses `set(key, value)`
 	settings.set(guild.id, defaultSettings);
-	
+
     const defaultChannel = guild.channels.find(`name`,`general`);
-	
+
 	if (defaultChannel)
 		defaultChannel.send("Hello! I am GremmieSealBot. I have automatically created some roles for you. The most important one is \"Gremmie Approved\". Give this role to all users who are allowed to send GremmieSeals. Some commands require the user to have an admin role.")
-	
+
 	if (!guild.roles.find("name", "Gremmie Approved")) {
-	
+
 		guild.createRole({
 
 		name: 'Gremmie Approved',
@@ -145,11 +145,11 @@ client.on("guildCreate", guild => {
 	  .then(role => console.log(`Created new role with name ${role.name} and color ${role.color}`))
 	  .catch(console.error)
 	}
-  
-  
+
+
   	if (!guild.roles.find("name", "Gremboss")) {
 
-  
+
 	  guild.createRole({
 		name: 'Gremboss',
 		  color: 'BLUE',
@@ -157,12 +157,12 @@ client.on("guildCreate", guild => {
 	  .then(role => console.log(`Created new role with name ${role.name} and color ${role.color}`))
 	  .catch(console.error)
 	}
-	
+
 	});
-	
+
 client.on("guildDelete", guild => {
   console.log("I've left a server.");
-	
+
   // Removing an element uses `delete(key)`
   settings.delete(guild.id);
 });
@@ -195,7 +195,7 @@ var jokes = ["What did the Gremlin say to the rock? Eat me!",
 
 var menMessages = ["Hello!", "Nice to see you again.", "That's me, GremmieSealBot!", "I love you, :b::b:", "How is your day going?", "Always nice to talk to you", "Thanks for talking to me!", "Our gremlins are bottled at the source", "All natural gremmies since 1988", "REDACTED"];
 const sql = require("sqlite");
-sql.open("score.sqlite");	
+sql.open("score.sqlite");
 
 let flashCount = 0;
 let flashMax = 10;
@@ -205,10 +205,10 @@ function flashA() {
 	if (flashCount < flashMax) {
 		flashCount++;
 		client.user.setStatus(`dnd`);
-		
+
 		client.user.setActivity('!ALERT', { type: 'PLAYING' })
 
-		
+
 		setTimeout(flashB, flashTimer);
 		console.log(`a`);
 	} else {
@@ -223,9 +223,9 @@ function flashB() {
 	if (flashCount < flashMax) {
 		flashCount++;
 		client.user.setStatus(`online`);
-		
+
 		client.user.setActivity('!GremmieHelp', { type: 'LISTENING' })
-		
+
 		setTimeout(flashA, flashTimer);
 		console.log(`b`);
 	} else {
@@ -239,11 +239,11 @@ function flashB() {
 function dmCode(message) {
 	if (message.author.bot)
 		return;
-	
-    if (!message.content.startsWith("!"))
-		mentionConversation(message, false); 
 
-	
+    if (!message.content.startsWith("!"))
+		mentionConversation(message, false);
+
+
    if (message.channel.type === "dm") {
 	  if (message.content.startsWith("!Announce") && contains(turbolish, message.author.id)) {
 		  for (var i = 0; i < client.guilds.size; i++) {
@@ -252,7 +252,7 @@ function dmCode(message) {
 					defaultChannel.send(`Announcement: ${message.cleanContent.slice("!Announce ".length)}`);
 		  }
 	  }
-	  
+
 	  if (message.content.startsWith("!RemoteConnection") && contains(turbolish, message.author.id)) {
 		  message.channel.send(`Here you go! \nUsername: \"ADMINISTRATOR\"\nPassword: \"GSBServer1010\"\nPlease send your public IP address to Tuggi, so you may be allowed access. \n \"To get your public IP, just google \"What's my IP?\"\"`, {
 			  files: [
@@ -260,18 +260,18 @@ function dmCode(message) {
 			  ]
 		  })
 	  }
-	  
+
 	  if (message.content.startsWith("!SetGame") && contains(turbolish, message.author.id)) {
 		client.user.setActivity(`${message.content.slice("!SetGame".length)}`)
-	  }		  
-	  
+	  }
+
 	  if (message.content.startsWith("!SetStatus")  && contains(turbolish, message.author.id)) {
 		  try {
-			  
+
 			  var args = message.content.slice("!SetStatus ".length).trim();
-			  
+
 			if (args == "online" || args == "offline" || args == "idle" || args == "dnd") {
-			  
+
 				  client.user.setStatus(args)
 				  .then(console.log)
 				  .catch(console.error);
@@ -279,18 +279,18 @@ function dmCode(message) {
 			} else {
 				message.reply ("Status modification failed - please use a status of online, offline, idle, or dnd.")
 			}
-			
+
 		  } catch (error) {
 			  message.reply(`Fatal error - ${error}. Please use a status of online, offline, idle, or dnd.`);
-			  
+
 		  }
 	  }
-	  
+
 	  if (message.content.startsWith("!Alert")  && contains(turbolish, message.author.id)) {
 		  flashCount = 0;
 		  flashA();
 	  }
-	  
+
 	  if (message.content.startsWith("!MasterDebug") && contains(turbolish, message.author.id)) {
 		  let debugInfo = `\nServerlist (${client.guilds.size}): \``
 		  for (var i = 0; i < client.guilds.size; i++) {
@@ -298,32 +298,32 @@ function dmCode(message) {
 
 			debugInfo += " | " + guild.name;
 		  }
-		  
+
 		  debugInfo += "\`";
-		  
+
 		  debugInfo += `\n\n Userlist (${client.users.size}): \``
 		  for (var i = 0; i < client.users.size; i++) {
 				const user = client.users.first(client.users.size)[i];
 			    debugInfo += " | " + user.username;
 		  }
 		  debugInfo += "\`";
-		  
+
 		  debugInfo += `\n\nUptime: \`${Math.trunc(client.uptime / 1000 / 60)} minutes, ${Math.trunc(client.uptime / 1000 / 60 / 60)} hours, or ${Math.trunc(client.uptime / 1000 / 60 / 60 / 24)} days. \``
 
-		  
-		  
-		  
-		  
+
+
+
+
 		  message.reply(debugInfo)
-		  
+
 	  }
-	  
+
 	  if (message.content.startsWith("!GetUser")) {
 		  message.reply(client.users.get(message.content.slice("!GetUser".length)).username);
-		  
+
 	  }
-	  
-	  
+
+
   } else {
 	  if (message.content.startsWith("!Feedback")) {
 		  if (message.channel.type === "dm" && message.author.id != "291754013131538432") {
@@ -332,14 +332,14 @@ function dmCode(message) {
 		  }
 	  }
   }
-	
+
 }
 
 function mentionConversation(message, mention) {
-	
+
 	if (message.author.bot)
 		return;
-	
+
 	if (mention) {
 	if (message.mentions.members.first().id === client.user.id && !(message.content.toLowerCase().includes("love".toLowerCase()) || message.content.toLowerCase().includes("ily".toLowerCase()))) {
 		  message.reply(pickRandomFromArray(menMessages));
@@ -348,7 +348,7 @@ function mentionConversation(message, mention) {
 		  message.reply(menMessages[3]);
 	  }
 	}
-	  
+
     if (!mention) {
 		if (!(message.content.toLowerCase().includes("love".toLowerCase()) || message.content.toLowerCase().includes("ily".toLowerCase()))) {
 		  message.reply(pickRandomFromArray(menMessages));
@@ -367,81 +367,101 @@ function mentionConversation(message, mention) {
 
 client.on('ready', () => {
 	client.user.setActivity('!GremmieHelp', { type: 'LISTENING' })
-	
+
 	for (var i = 0; i < client.guilds.size; i++) {
 				const guild = client.guilds.first(client.guilds.size)[i];
 				servers[i] = guild;
 	}
-	
+
 	prompt.start();
+
+  if (config === undefined) {
+    console.log("Config file not found!");
+    console.log(`Please create config.json, and place your token in it.
+    \n Example:
+    \n {
+    \n\"token\": \"sduiopfgyserukfyuiqwyeoyqWEJCY\"
+    \n}`)
+  }
+
+  if (config != undefined && config.token === undefined) {
+    console.log(`You've got a config file, but it doesn't look like it has a token in it.
+    \n Example:
+    \n {
+    \n\"token\": \"sduiopfgyserukfyuiqwyeoyqWEJCY\"
+    \n}`);
+  }
+
 	console.log('I am ready!');
 
-	
-	
-	
+
+
+
+
+
 
 	sql.run("CREATE TABLE IF NOT EXISTS seals (serverID TEXT, slot1 TEXT, slot2 TEXT, slot3 TEXT)");
 
 });
 
 client.on('message', message => {
-   
-	
+
+
    if (message.channel.type === "dm")
 	    dmCode(message);
-	
+
    if (message.mentions.members != undefined) {
 	   if (message.mentions.members.first() == client.user) {
 		   mentionConversation(message, true);
 		   return;
 	   }
    }
-	
+
    if (message.channel.type === "dm") return;
    if (message.author.bot) return;
-   
+
    if (contains(turbolish, message.author.id) && message.author.presence.status == "offline") {
 	   if (message.guild.members.get(`${client.user.id}`).hasPermission(`MANAGE_MESSAGES`)) {
 		  message.channel.send(message.content);
-			
+
 		  message.react("✔").then();
 		  message.delete(250);
 	  } else {
-		  message.channel.send("That action could not be completed elegantly with the given permissions.").then(mes => mes.delete(5000)); 
+		  message.channel.send("That action could not be completed elegantly with the given permissions.").then(mes => mes.delete(5000));
 		  message.react("❌");
 	  }
 
    }
-  
+
    const guildConf = settings.get(message.guild.id) || defaultSettings;
-   
+
    const args = message.content.split(` `/* /\s+/g */);
    const command = args.shift().slice(guildConf.prefix.length);
-   
 
-	
-   
+
+
+
    	if ((message.content.includes("horsey surprise") || message.content.includes("horseysurpise")) && guildConf.fun === "true") {
 	  message.channel.send("https://pbs.twimg.com/profile_images/1641005897/horseyavatar_400x400.jpg");
 	}
-   
+
    if (message.content.includes("@someone"))
 	   message.reply(`Random user selected - ${message.channel.members.random()}`);
-	
+
    if (/* message.author.id == 312297956701372424 && */ message.content.includes("LOL") && guildConf.fun === "true")
 	   message.channel.send("LOL");
-	
-	
 
 
-  
+
+
+
   for (var i = 0; i < insults.length; i++) {
 
 	  if (message.content.toLowerCase().trim().includes(insults[i].toLowerCase().trim()) && guildConf.fun === "true") {
 		  message.reply(comebacks[i]);
 	  }
   }
-  
+
   if (!message.content.startsWith(guildConf.prefix)) {
 	   return;
    }
@@ -453,32 +473,32 @@ client.on('message', message => {
 	  });
 
   }
-  
+
   if(command === "SetProperty") {
 	  console.log(`Value 1: ${args[0]}, Value 2: ${args[1]}`)
-	  
-    // Command is admin only, let's grab the admin value: 
-    
+
+    // Command is admin only, let's grab the admin value:
+
     // Then we'll exit if the user is not admin
     if(!message.member.hasPermission(`ADMINISTRATOR`)) return message.reply("You're not an admin, sorry!")
-    
+
     const key = args[0];
     // Since we inserted an object, it comes back as an object, and we can use it with the same properties:
     if(!guildConf.hasOwnProperty(key)) return message.reply("That property does not exist.");
-    
+
     // Now we can finally change the value. Here we only have strings for values so we won't
-    // bother trying to make sure it's the right type and such. 
+    // bother trying to make sure it's the right type and such.
     guildConf[key] = args[1];
-    
+
     // Then we re-apply the changed value to the PersistentCollection
     settings.set(message.guild.id, guildConf);
-    
+
     // We can confirm everything's done to the client.
     message.channel.send(`Server configuration item ${key} has been changed to:\n\`${args[1]}\``);
   }
 
   if (command === "GetProperties") {
-	  
+
 	  const embed = new Discord.RichEmbed()
 				  .setTitle("Property list")
 				  .setAuthor(client.user.username, client.user.avatarURL)
@@ -487,10 +507,10 @@ client.on('message', message => {
 				  Object.keys(guildConf).forEach(key => {
 					embed.addField(key, `${guildConf[key]}`);
 				  });
-				
+
 				return message.channel.send({embed});
   }
-  
+
   if (guildConf.beta === "true") {
 	   if (message.content.startsWith("!GremmieStop") && message.member.roles.find("name", "Gremmie DJ")) {
 		  stopMusic(message);
@@ -499,12 +519,12 @@ client.on('message', message => {
 			  message.reply("You must be a Gremmie DJ to preform this action.");
 		  }
 	  }
-	  
+
 	  if (message.content.startsWith("!GremmieSkip") && message.member.roles.find("name", "Gremmie DJ")) {
 		  var server = servers[message.channel.guild.id];
 			  if (server.queue[0]) {
 				  //message.guild.voiceConnection.disconnect();
-				  playSong(message); 
+				  playSong(message);
 				  message.channel.send("Song skipped.");
 			  } else {
 				  message.channel.send("There is no song to skip to. Did you mean to type \"!GremmieStop\"?");
@@ -514,17 +534,17 @@ client.on('message', message => {
 			  message.channel.send("Sorry, but only Gremmie DJs can skip songs.");
 		  }
 	  }
-	  
+
 	  if (message.content.startsWith("!GremmieQueue")) {
 		  getQueue(message);
 	  }
-	  
+
 	  if (message.content.startsWith("!GremmiePlay") && message.member.roles.find("name", "Gremmie DJ")){
 
-	  
+
 		if(!args) return message.channel.send("The Gremlins can't play nothing! Please provide a song name/link.");
 		if(!message.member.voiceChannel) return message.reply("GSB requires you to be in a voice channel to play, so it knows where to go.");
-		if(!servers[message.channel.guild.id]) servers[message.channel.guild.id] ={ 
+		if(!servers[message.channel.guild.id]) servers[message.channel.guild.id] ={
 			queue: []
 		}
 		var queue = servers[message.channel.guild.id].queue;
@@ -532,60 +552,60 @@ client.on('message', message => {
 		if(args.indexOf("https") > -1 || args.indexOf("http") > -1){
 		  message.reply("Adding URL "+args);
 		  server.queue.push(args);
-		} else{ 
+		} else{
 		  message.reply("Adding "+(message.content.slice("!GremmiePlay".length)));
 		  searchfunc(message);
 		}
-		  playSong(message); 
-		
+		  playSong(message);
+
 	  } else {
 		  if (message.content.startsWith("!GremmiePlay") && !message.member.roles.find("name", "Gremmie DJ")) {
 			  message.reply("Sorry, to use this command, you must have the \"Gremmie DJ\" role.");
 		  }
-  } 
+  }
   }
 
-  
+
   if (command === "GremmieInfo") {
 	  message.reply(`GremmieSealBot is currently active in ${client.guilds.size} servers. Latency is ${new Date().getTime() - message.createdTimestamp} ms.\nProudly serving ${client.users.size} users. Uptime is ${Math.trunc(client.uptime / 1000 / 60)} minutes, or ${Math.trunc(client.uptime / 1000 / 60 / 60)} hours`);
   }
-  
+
   if (command === "SqlDelete" && contains(turbolish, message.author.id)) {
 	  sql.run(`DELETE FROM scores WHERE userId= ${args}`)
   } else if (command === "SqlDelete" && !contains(turbolish, message.author.id)) {
 	  message.reply("Sorry, but Turbolish is required to run this command.")
   }
-  
+
   if (command === "SqlDebug" && contains(turbolish, message.author.id)) {
 	  const embed = new Discord.RichEmbed().setTitle("Sql Data Dump")
 				  .setAuthor(client.user.username, client.user.avatarURL)
 				  .setDescription("All user data:")
 				  .setColor(0x00AE86);
-				  
+
 	  for (let i = 0; i < client.users.array().length.clamp(0,25) - 1; i++)
 		  sql.get(`SELECT DISTINCT userId, gremmiesRecieved, gremmiesGiven FROM scores LIMIT ${i}, 1`).then(row => {
 			  message.channel.send(`User ID: ${row.userId} -- Name: ${client.users.get(row.userId).username} - ${row.gremmiesRecieved} Gremmies Received -- ${row.gremmiesGiven} Gremmies Sent.`);
 			  embed.addField(client.users.get(row.userId).username, `${row.gremmiesRecieved} Gremmies Received -- ${row.gremmiesGiven} Gremmies Sent.`);
-			  
+
 		  })
-	  
+
 	  //return message.channel.send({embed});
 
-				  
-			  
+
+
   } else if (command === "SqlDebug" && !contains(turbolish, message.author.id)) {
 	  message.reply("Sorry, but Turbolish is required to run this command.")
   }
-  
 
-  
+
+
   if (command === "TopStats" && guildConf.beta == "true") {
 			const embed = new Discord.RichEmbed().setTitle("Leaderboards")
 				  .setAuthor(client.user.username, client.user.avatarURL)
 				  .setDescription("Here are the stats for the top 3 users:")
 				  .setColor(0x00AE86);
 
-			
+
 			for	(var i = 0; i < 3; i++) {
 				sql.get(`SELECT DISTINCT userId, gremmiesRecieved, gremmiesGiven FROM scores ORDER BY gremmiesRecieved DESC LIMIT ${i - 1}, 1`).then(row => {
 					console.log(`Name: ${client.users.get(row.userId).username} - ${row.gremmiesRecieved} Gremmies Received -- ${row.gremmiesGiven} Gremmies Sent.`)
@@ -602,26 +622,26 @@ client.on('message', message => {
 					} else {
 						return message.channel.send("Oh darn, something went wrong here!");
 					}
-					
+
 				})
 			}
 			//return message.channel.send({embed});
-			
 
-			
+
+
 	  }
-  
-  
+
+
   if (command === "AddCustomSeal" && message.member.hasPermission(`ADMINISTRATOR`)) {
-		
+
 		try {
 		var slot = args[0];
 		slot.trim();
 		var slotInt = parseInt(slot, 10);
-		
+
 		var imgLink = args[1];
 		imgLink.trim();
-		
+
 		var price = args[2];
 		price.trim();
 		var priceInt = parseInt(price, 10);
@@ -629,12 +649,12 @@ client.on('message', message => {
 			message.reply("It doesn't appear that this command was formatted correctly, here is a handy dandy formatting guide! \`SLOT NUMBER|IMAGE LINK|SEAL PRICE\`");
 			return;
 		}
-		
+
 		if (slotInt > 3 || slotInt < 1) {
 			message.reply("Sorry, that is an invalid ID, there are only three slots. Please use numbers 1-3.\nHere is a handy dandy formatting guide! \`SLOT NUMBER|IMAGE LINK|SEAL PRICE\`");
 			return;
 		}
-		
+
 		sql.get(`SELECT * FROM seals WHERE serverID ="${message.channel.guild.id}"`).then(row => {
 			if (row) {
 				sql.run(`UPDATE seals SET slot${slotInt} = "${imgLink}| ${priceInt} | Price: ${priceInt} - ID: ${slotInt * -1}" WHERE serverID = ${message.channel.guild.id}`);
@@ -650,19 +670,19 @@ client.on('message', message => {
 			message.reply("This command is admin only.");
 		}
 	}
-  
-  
-  
+
+
+
 
 
   var row;
-  
 
-  
+
+
   if (command === "GremmieFarewell" && guildConf.fun === "true") {
 	  if (message.mentions.members.first() != undefined)
 		message.channel.send(`Minion's blessing. ${message.mentions.members.first()} https://i.imgur.com/af19I27.jpg`);
-	
+
 	  if (message.mentions.members.first() === undefined)
 		message.channel.send(`Minion's blessing. https://i.imgur.com/af19I27.jpg`);
   }
@@ -672,20 +692,20 @@ client.on('message', message => {
     for (var i = 0; i < seals.length; i++) {
       message.channel.send(seals[i]);
     }
-	
+
 	sql.get(`SELECT * FROM seals WHERE serverID ="${message.channel.guild.id}"`).then(row => {
 		if (row.slot1 != "")
 			message.channel.send(row.slot1);
-		
+
 		if (row.slot2 != "")
 			message.channel.send(row.slot2);
-		
+
 		if (row.slot3 != "")
 			message.channel.send(row.slot3);
-		
-		
+
+
 	});
-	
+
 	return;
   }
 
@@ -697,38 +717,38 @@ client.on('message', message => {
       sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => {
 
       var argInt = parseInt(args[0], 10);
-	  
 
-	
+
+
 	  if (argInt === undefined) {
 		  message.reply("Please type a seal id following the command.");
 	  }
 	  sql.get(`SELECT * FROM seals WHERE serverID ="${message.channel.guild.id}"`).then(rowSeals => {
 
 	  if (argInt < 0) {
-		  
+
 		  var fetchedString = "ID OUT OF RANGE ERROR1";
 
-			
+
 			let fetch = "ID OUT OF RANGE ERROR2";
 			if (argInt == -1) fetch = rowSeals.slot1;
 			if (argInt == -2) fetch = rowSeals.slot2;
 			if (argInt == -3) fetch = rowSeals.slot3;
-			
+
 			fetchedString = fetch;
-				
-			
+
+
 
 		  if (argInt < -3 || argInt > -1) {
 					message.reply("When using a custom seal, the ID must be between -1 and -3.");
 					return;
 		}
 		  if (parseInt(fetchedString.split('|')[1], 10) <= row.gremmiesRecieved && argInt != undefined) {
-				  
-				  
+
+
 				  //
 
-					
+
 					sql.run(`UPDATE scores SET selectedSeal = ${argInt} WHERE userId = ${message.author.id}`);
 					message.reply(`New seal set - ${fetchedString}`)
 				  //}
@@ -738,7 +758,7 @@ client.on('message', message => {
 	  }
 	});
 
-	  
+
 	  if (argInt >= 0) {
 		  if (parseInt(seals[argInt].split('|')[1], 10) <= row.gremmiesRecieved && argInt != undefined) {
 			message.reply("New Seal set - " + seals[argInt]);
@@ -751,7 +771,7 @@ client.on('message', message => {
 			}
 		}
 	  }
-	  
+
 
   });
 	}
@@ -818,24 +838,24 @@ client.on('message', message => {
 
     if (slotInt >= 0) {
 		sealText = seals[slotInt];
-	} else { 
+	} else {
 		if (rowSeals) {
 			let fetch = "ID OUT OF RANGE ERROR3";
 			if (slotInt == -1) fetch = rowSeals.slot1;
 			if (slotInt == -2) fetch = rowSeals.slot2;
 			if (slotInt == -3) fetch = rowSeals.slot3;
-			
+
 			sealText = fetch;
 		} else {
 			sealText = seals[0];
 		}
-		
+
 	}
 	  if (sealText === undefined || sealText === null)
 		  sealText = seals[0];
 	  message.channel.send(Response + " " + sealText.split('|')[0]);
-	
-	  
+
+
     })
 	});
 
@@ -859,14 +879,14 @@ client.on('message', message => {
       message.reply("Hi, yes, please don't do that. This command is reserved for those with Turbolish");
       logAction("User " + message.author.username + " attempted an unauthorized shutdown. Time: " + new Date());
     }
-  } 
+  }
 
   if (command === "GiveSeals" && contains(turbolish, message.author.id)) {
-	  
-	  
+
+
 
     var sealCountToGive = parseInt(message.content.split("|")[1], 10);
-	
+
 	if (message.mentions.members.first() != undefined && !(sealCountToGive != sealCountToGive)) {
 		sql.get(`SELECT * FROM scores WHERE userId ="${message.mentions.members.first().id}"`).then(row => {
 		  if (row.gremmiesRecieved)
@@ -876,29 +896,29 @@ client.on('message', message => {
 	} else {
 		message.reply(`Syntax error. Please use this format when mass sending:
 		\`!GiveSeals @USERHERE | SEALCOUNT\``);
-	
+
 	}
 
 
   }
 
   if (command === "GremmieSays" && contains(turbolish, message.author.id) && guildConf.fun === "true") {
-	  
+
 	  if (message.guild.members.get(`${client.user.id}`).hasPermission(`MANAGE_MESSAGES`)) {
 		  message.channel.send(message.content.slice("!GremmieSays".length));
-			
+
 		  message.react("✔").then();
 		  message.delete(500);
 	  } else {
-		  message.channel.send("That action could not be completed elegantly with the given permissions.").then(mes => mes.delete(5000)); 
+		  message.channel.send("That action could not be completed elegantly with the given permissions.").then(mes => mes.delete(5000));
 		  message.react("❌");
 	  }
-	  
+
   } else if (command === "GremmieSays" && !contains(turbolish, message.author.id)) {
 	  message.channel.send("Sorry, but this command requires TurboLish level GremmieClearance to use.");
 	  message.react("❌");
   }
-  
+
   if (command === "GremmieJoke" && guildConf.fun === "true") {
 
     var pickedJoke = pickRandomFromArray(jokes);
@@ -945,10 +965,10 @@ client.on('message', message => {
 	\n \"!ForceGremmieJoke\" - Force a specified joke by ID
 	\n \"!GremmieStats\" - Retrieves the user's stats (How many GremmieSeals the user has sent, and received)
 	\n \"!TopStats\" - Shows the stats for the user with the most GremmieSeals.
-	\n \"!GremmieBugReport\" - Reports an issue with GremmieSealBot to Tuggi, so he can fix it. 
-	\n \"!SealCatalog\" - Shows all available GremmieSeals 
+	\n \"!GremmieBugReport\" - Reports an issue with GremmieSealBot to Tuggi, so he can fix it.
+	\n \"!SealCatalog\" - Shows all available GremmieSeals
 	\n \"!PatchNotes\" - Displays patch notes for all updates.
-	\n \"!SetSeal\" - Sets the user's GremmieSeal. Type \"!SetSeal\" followed by the seal's id. You can get it's ID with !SealCatalog 
+	\n \"!SetSeal\" - Sets the user's GremmieSeal. Type \"!SetSeal\" followed by the seal's id. You can get it's ID with !SealCatalog
 	\n \"!GiveSeals\" (TurboLish Only) - Gives the mentioned user a set amount of seals. Ex: \"!GiveSeals @FrickinHecker#5233 | 6\" Write the amount of seals after the mention, seperated by a \"|\"
 	\n \"!AddCustomSeal\" (Admin Only) - Adds a custom seal, only available on your server. Syntax: \`!AddCustomSeal ID (1-3) | IMAGE LINK | PRICE\`
 	\n \"!SetProperrty\" (Admin Only) - Sets a server property. These change how the bot will behave in your server.
@@ -957,7 +977,7 @@ client.on('message', message => {
 	\n	prefix (Any character, any length, defaults to !) - Changes how you invoke the bot.
 	\n \"!GremmieInfo\" - Shows bot info \n\n Debug commands may not always be stable/functional, Production, low level commands will always work, and be available.
 	\n If a command isn't working as intended, please use \"!GremmieBugReport\", followed by the problem you are experiencing.
-	
+
 	\n\n In ${client.guilds.size} servers. Latency is ${new Date().getTime() - message.createdTimestamp}ms.`);
 
     }
@@ -978,19 +998,19 @@ client.on('message', message => {
 function getSealFull(ID, message) {
 	 if (ID >= 0) {
 		return seals[ID];
-	} else { 
+	} else {
 		sql.get(`SELECT * FROM seals WHERE serverID = "${message.channel.guild.id}"`).then(cSeals => {
 
 			let fetch = "ID OUT OF RANGE ERROR";
 			if (ID == -1) fetch = cSeals.slot1;
 			if (ID == -2) fetch = cSeals.slot2;
 			if (ID == -3) fetch = cSeals.slot3;
-			
+
 			return fetch;
-		
+
 		});
 	}
-	
+
 	return "ID FAILURE ERROR";
 }
 
