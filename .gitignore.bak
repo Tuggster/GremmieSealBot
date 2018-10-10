@@ -1,5 +1,6 @@
 # GSB Sensitive Data
 config.json
+config.json.bak
 
 # Logs
 logs
