@@ -22,13 +22,17 @@ const Provider = require('enmap-sqlite');
 const settings = new Enmap({provider: new Provider({name: "settings"})});
 
 
-const turbolish = [`291754013131538432`, `311649075776847872`, `314229467469971456`];
+const turbolish = [`291754013131538432`, `311649075776847872`, `311650834062639104`];
 
 
 const defaultSettings = {
   prefix: "!",
   fun: "true",
   beta: "false"
+}
+
+const userPrefsDefault = {
+  custom
 }
 
 
@@ -634,15 +638,16 @@ client.on('message', message => {
 
   if (command === "AddCustomSeal" && message.member.hasPermission(`ADMINISTRATOR`)) {
 
+    argsC = message.content.slice(command.length + guildConf.prefix.length).split(`|`);
 		try {
-		var slot = args[0];
+		var slot = argsC[0];
 		slot.trim();
 		var slotInt = parseInt(slot, 10);
 
-		var imgLink = args[1];
+		var imgLink = argsC[1];
 		imgLink.trim();
 
-		var price = args[2];
+		var price = argsC[2];
 		price.trim();
 		var priceInt = parseInt(price, 10);
 		} catch (e) {
