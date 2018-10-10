@@ -31,9 +31,9 @@ const defaultSettings = {
   beta: "false"
 }
 
-const userPrefsDefault = {
-  custom
-}
+// const userPrefsDefault = {
+  // custom
+// }
 
 
 function stopMusic(message) {
