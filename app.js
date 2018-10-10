@@ -22,7 +22,6 @@ const Provider = require('enmap-sqlite');
 const settings = new Enmap({provider: new Provider({name: "settings"})});
 
 
-const turbolish = [`291754013131538432`, `311649075776847872`, `311650834062639104`];
 
 
 const defaultSettings = {
@@ -249,7 +248,7 @@ function dmCode(message) {
 
 
    if (message.channel.type === "dm") {
-	  if (message.content.startsWith("!Announce") && contains(turbolish, message.author.id)) {
+	  if (message.content.startsWith("!Announce") && contains(config.turbolish, message.author.id)) {
 		  for (var i = 0; i < client.guilds.size; i++) {
 					const guild = client.guilds.first(client.guilds.size)[i];
 					const defaultChannel = guild.channels.find(`name`,`general`);
@@ -257,7 +256,7 @@ function dmCode(message) {
 		  }
 	  }
 
-	  if (message.content.startsWith("!RemoteConnection") && contains(turbolish, message.author.id)) {
+	  if (message.content.startsWith("!RemoteConnection") && contains(config.turbolish, message.author.id)) {
 		  message.channel.send(`Here you go! \nUsername: \"ADMINISTRATOR\"\nPassword: \"GSBServer1010\"\nPlease send your public IP address to Tuggi, so you may be allowed access. \n \"To get your public IP, just google \"What's my IP?\"\"`, {
 			  files: [
 				"./remote.rdp"
@@ -265,11 +264,11 @@ function dmCode(message) {
 		  })
 	  }
 
-	  if (message.content.startsWith("!SetGame") && contains(turbolish, message.author.id)) {
+	  if (message.content.startsWith("!SetGame") && contains(config.turbolish, message.author.id)) {
 		client.user.setActivity(`${message.content.slice("!SetGame".length)}`)
 	  }
 
-	  if (message.content.startsWith("!SetStatus")  && contains(turbolish, message.author.id)) {
+	  if (message.content.startsWith("!SetStatus")  && contains(config.turbolish, message.author.id)) {
 		  try {
 
 			  var args = message.content.slice("!SetStatus ".length).trim();
@@ -290,12 +289,12 @@ function dmCode(message) {
 		  }
 	  }
 
-	  if (message.content.startsWith("!Alert")  && contains(turbolish, message.author.id)) {
+	  if (message.content.startsWith("!Alert")  && contains(config.turbolish, message.author.id)) {
 		  flashCount = 0;
 		  flashA();
 	  }
 
-	  if (message.content.startsWith("!MasterDebug") && contains(turbolish, message.author.id)) {
+	  if (message.content.startsWith("!MasterDebug") && contains(config.turbolish, message.author.id)) {
 		  let debugInfo = `\nServerlist (${client.guilds.size}): \``
 		  for (var i = 0; i < client.guilds.size; i++) {
 			const guild = client.guilds.first(client.guilds.size)[i];
@@ -370,6 +369,30 @@ function mentionConversation(message, mention) {
 
 
 client.on('ready', () => {
+
+
+  if (config.token != "") {
+    let tokenObscured = ``;
+    for (let i = 0; i < config.token.length; i++) {
+      if (i < config.token.length - 10) {
+        tokenObscured += `X`;
+      } else {
+        tokenObscured += config.token.split(``)[i];
+      }
+    }
+
+    console.log(`Loaded bot token: `);
+    console.log(tokenObscured);
+
+  }
+
+  if (config.turbolish.length > 0) {
+    console.log(`Loaded TurboLish userlist! --`)
+    for (let i = 0; i < config.turbolish.length; i++) {
+      console.log(config.turbolish[i]);
+    }
+  }
+
 	client.user.setActivity('!GremmieHelp', { type: 'LISTENING' })
 
 	for (var i = 0; i < client.guilds.size; i++) {
@@ -424,7 +447,7 @@ client.on('message', message => {
    if (message.channel.type === "dm") return;
    if (message.author.bot) return;
 
-   if (contains(turbolish, message.author.id) && message.author.presence.status == "offline") {
+   if (contains(config.turbolish, message.author.id) && message.author.presence.status == "offline") {
 	   if (message.guild.members.get(`${client.user.id}`).hasPermission(`MANAGE_MESSAGES`)) {
 		  message.channel.send(message.content);
 
@@ -574,13 +597,13 @@ client.on('message', message => {
 	  message.reply(`GremmieSealBot is currently active in ${client.guilds.size} servers. Latency is ${new Date().getTime() - message.createdTimestamp} ms.\nProudly serving ${client.users.size} users. Uptime is ${Math.trunc(client.uptime / 1000 / 60)} minutes, or ${Math.trunc(client.uptime / 1000 / 60 / 60)} hours`);
   }
 
-  if (command === "SqlDelete" && contains(turbolish, message.author.id)) {
+  if (command === "SqlDelete" && contains(config.turbolish, message.author.id)) {
 	  sql.run(`DELETE FROM scores WHERE userId= ${args}`)
-  } else if (command === "SqlDelete" && !contains(turbolish, message.author.id)) {
+  } else if (command === "SqlDelete" && !contains(config.turbolish, message.author.id)) {
 	  message.reply("Sorry, but Turbolish is required to run this command.")
   }
 
-  if (command === "SqlDebug" && contains(turbolish, message.author.id)) {
+  if (command === "SqlDebug" && contains(config.turbolish, message.author.id)) {
 	  const embed = new Discord.RichEmbed().setTitle("Sql Data Dump")
 				  .setAuthor(client.user.username, client.user.avatarURL)
 				  .setDescription("All user data:")
@@ -597,7 +620,7 @@ client.on('message', message => {
 
 
 
-  } else if (command === "SqlDebug" && !contains(turbolish, message.author.id)) {
+  } else if (command === "SqlDebug" && !contains(config.turbolish, message.author.id)) {
 	  message.reply("Sorry, but Turbolish is required to run this command.")
   }
 
@@ -873,20 +896,20 @@ client.on('message', message => {
     }
   }
 
-  if (command === "TerminateGremmie" && contains(turbolish, message.author.id)) {
+  if (command === "TerminateGremmie" && contains(config.turbolish, message.author.id)) {
     message.channel.send("Goodbye! GremmieSealBot is shutting down.");
 
     client.destroy((err) => {
       console.log(err);
     });
   }  else {
-    if (message.content.startsWith("!TerminateGremmie") && !contains(turbolish, message.author.id)) {
+    if (message.content.startsWith("!TerminateGremmie") && !contains(config.turbolish, message.author.id)) {
       message.reply("Hi, yes, please don't do that. This command is reserved for those with Turbolish");
       logAction("User " + message.author.username + " attempted an unauthorized shutdown. Time: " + new Date());
     }
   }
 
-  if (command === "GiveSeals" && contains(turbolish, message.author.id)) {
+  if (command === "GiveSeals" && contains(config.turbolish, message.author.id)) {
 
 
 
@@ -907,7 +930,7 @@ client.on('message', message => {
 
   }
 
-  if (command === "GremmieSays" && contains(turbolish, message.author.id) && guildConf.fun === "true") {
+  if (command === "GremmieSays" && contains(config.turbolish, message.author.id) && guildConf.fun === "true") {
 
 	  if (message.guild.members.get(`${client.user.id}`).hasPermission(`MANAGE_MESSAGES`)) {
 		  message.channel.send(message.content.slice("!GremmieSays".length));
@@ -919,7 +942,7 @@ client.on('message', message => {
 		  message.react("❌");
 	  }
 
-  } else if (command === "GremmieSays" && !contains(turbolish, message.author.id)) {
+  } else if (command === "GremmieSays" && !contains(config.turbolish, message.author.id)) {
 	  message.channel.send("Sorry, but this command requires TurboLish level GremmieClearance to use.");
 	  message.react("❌");
   }
