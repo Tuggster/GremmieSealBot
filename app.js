@@ -438,13 +438,14 @@ client.on('message', message => {
    // We don't want to respond to bots, so we'll return if we see a bot message.
    if (message.author.bot) return;
 
-   let randomNumber = Math.floor(Math.random() * 1000);
-   if (randomNumber == 1) {
-     let responses = [ "Hello? Can anybody hear me?", "Testing Testing 1 2 3" ];
-     let Response = pickRandomFromArray(responses);
+   // Ethan's Cyberbot code -- Occasional bits of GSB lore are revealed!
+   let randomNumber = Math.floor(Math.random() * 1000); // Get a random number between 0-1000
+   if (randomNumber == 1) { // Check if it's 1
+     let responses = [ "Hello? Can anybody hear me?", "Testing Testing 1 2 3" ]; // Get some responses
+     let Response = pickRandomFromArray(responses); // Get the primary response
 	
-     message.channel.send(Response);
-	 message.channel.send({embed: {
+     message.channel.send(Response); // Send the response
+	 message.channel.send({embed: { // Send the Cyberbot embed.
 		color: 0xfff542,
 		description: "A cyberbot message"
 		}});
