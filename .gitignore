@@ -65,3 +65,5 @@ typings/
 .next
 data/enmap.sqlite-wal
 *.sqlite-wal
+*.bak
+*.sqlite-shm

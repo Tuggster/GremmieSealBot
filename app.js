@@ -438,13 +438,16 @@ client.on('message', message => {
    // We don't want to respond to bots, so we'll return if we see a bot message.
    if (message.author.bot) return;
 
-   let randomNumber = Math.floor (Math.random * 5);
-
+   let randomNumber = Math.floor(Math.random() * 1000);
    if (randomNumber == 1) {
-     let responses = { "Hello? Can anybody hear me? \n A cyberbot message", "Testing Testing 1 2 3 \n A cyberbot message" };
+     let responses = [ "Hello? Can anybody hear me?", "Testing Testing 1 2 3" ];
      let Response = pickRandomFromArray(responses);
-
-     message.reply(Response);
+	
+     message.channel.send(Response);
+	 message.channel.send({embed: {
+		color: 0xfff542,
+		description: "A cyberbot message"
+		}});
    }
 
    // If the message is from an invisible turbo-lish user, we'll delete their message, and regurgitate it.
