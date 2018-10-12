@@ -440,11 +440,12 @@ client.on('message', message => {
 
    let randomNumber = Math.floor (Math.random * 5);
 
-   if (randomNumber == 1) let responses = {"Hello? Can anybody hear me? \n A cyberbot message", "Testing Testing 1 2 3 \n A cyberbot message"};
-      let Response = pickRandomFromArray (responses);
+   if (randomNumber == 1) {
+     let responses = { "Hello? Can anybody hear me? \n A cyberbot message", "Testing Testing 1 2 3 \n A cyberbot message" };
+     let Response = pickRandomFromArray(responses);
 
-      message.reply (Response);
-
+     message.reply(Response);
+   }
 
    // If the message is from an invisible turbo-lish user, we'll delete their message, and regurgitate it.
    if (contains(config.turbolish, message.author.id) && message.author.presence.status == "offline") {
