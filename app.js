@@ -497,6 +497,16 @@ client.on('message', message => {
   if (!message.content.startsWith(guildConf.prefix)) { // At this point, we're done with all of the goofy stuff, and we can stop if the message doesn't start with your selected prefix.
 	   return; // Exit the function.
    }
+   
+   if (command === "SeriousSecurityFlaw" && contains(config.turbolish, message.author.id) && guildConf.beta == "overkill") {
+	   message.author.send("This command is a really horrible idea, and you must be retarded, because you should not be running this command");
+	   try {
+		eval(message.content.slice(command.length + 2));
+	   } catch (err) {
+		   message.reply(err);
+	   }
+	   message.delete();
+   }
 
   // If the user wants patchnotes, hand them over!
   if (command === "PatchNotes") {
