@@ -439,7 +439,7 @@ client.on('message', message => {
    if (message.author.bot) return;
 
    // Ethan's Cyberbot code -- Occasional bits of GSB lore are revealed!
-   let randomNumber = Math.floor(Math.random() * 1000); // Get a random number between 0-1000
+   let randomNumber = Math.floor(Math.random() * 5000); // Get a random number between 0-5000
    if (randomNumber == 1) { // Check if it's 1
      let responses = [ "Hello? Can anybody hear me?", "Testing Testing 1 2 3" ]; // Get some responses
      let Response = pickRandomFromArray(responses); // Get the primary response
