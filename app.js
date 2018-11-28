@@ -731,34 +731,31 @@ client.on('message', message => {
     message.channel.send("These are all of the available seals. To select a seal, you must have a received Gremmies count greater than or equal to the seals price. If this condition is met, you then type \"!SetSeal\" followed by the seal's ID. To find it's ID, count it's position in the catalog, starting from 0. To find the ID of a custom seal, look at it's catalog entry. It will contain it's ID. Please include the - when purchasing them, as it is required to tell the standard seals apart from the custom seals."); // Send some info about the catalog.
 
     const embed = new Discord.RichEmbed() // Create a new RichEmbed.
-          .setTitle("Property list") // Set the embed's title.
-          .setAuthor(client.user.username, client.user.avatarURL) // Set it's author, and avatar.
-          .setDescription("Properties:") // Give it a description.
-          .setColor(0x00ce71); // Set it's color to a nice green.
-          Object.keys(guildConf).forEach(key => {
+	  .setTitle("Today's GremmieSeal Catalog") // Set the embed's title.
+	  .setAuthor(client.user.username, client.user.avatarURL) // Set it's author, and avatar.
+	  .setDescription("Our seals:") // Give it a description.
+	  .setColor(0x7f0026); // Set it's color to a nice crimson.
 
-            for (var i = 0; i < seals.length; i++) {
-              embed.addField(`Seal #${i}`, `${seals[i]}`); // Loop through each key, and add it's value to the embed.
-            }
+		for (var i = 0; i < seals.length; i++) {
+		  embed.addField(`Seal #${i}`, `${seals[i]}`); // Loop through each seal, and add it's value to the embed.
+		}
 
-            // Grab the server's custom seal page.
-            sql.get(`SELECT * FROM seals WHERE serverID ="${message.channel.guild.id}"`).then(row => {
-              if (row.slot1 != "") // If the first slot is in use, send it's contents.
-                embed.addField(`Custom Seal #1`, `${row.slot1}`);
-
-
-              if (row.slot2 != "") // If the second slot is in use, send it's contents.
-                embed.addField(`Custom Seal #2`, `${row.slot2}`);
-
-              if (row.slot3 != "") // If the third slot is in use, send it's contents.
-                embed.addField(`Custom Seal #3`, `${row.slot3}`);
-            });
-          });
-
-          return message.channel.send({embed}); // Send the embed.
+		// Grab the server's custom seal page.
+		sql.get(`SELECT * FROM seals WHERE serverID ="${message.channel.guild.id}"`).then(row => {
+		  if (row.slot1 != "") // If the first slot is in use, send it's contents.
+			embed.addField(`Custom Seal #1`, `${row.slot1}`);
 
 
-  	});
+		  if (row.slot2 != "") // If the second slot is in use, send it's contents.
+			embed.addField(`Custom Seal #2`, `${row.slot2}`);
+
+		  if (row.slot3 != "") // If the third slot is in use, send it's contents.
+			embed.addField(`Custom Seal #3`, `${row.slot3}`);
+		});
+
+	  return message.channel.send({embed}); // Send the embed.
+
+
 
   	return;
   }
