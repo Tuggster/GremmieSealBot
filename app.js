@@ -452,7 +452,7 @@ client.on('message', message => {
 	   if (message.guild.members.get(`${client.user.id}`).hasPermission(`MANAGE_MESSAGES`)) { // See if the bot can delete the user's message. We need to do this to regurgitate it.
 		  message.channel.send(message.content); // Echo back the user's message.
 
-		  message.react("✔").then(); // Respind with a check mark emoji - it looks cool.
+		  message.react("✔").then(); // Respond with a check mark emoji - it looks cool.
 		  message.delete(250); // Quickly delete the message. I don't do it instantly, because if it was instant, you wouldn't be able to see the checkmark.
 	  } else { // If we can't delete the message, abort!
 		  message.channel.send("That action could not be completed elegantly with the given permissions.").then(mes => mes.delete(5000)); // Tell them the command failed, and delete the failure message after 5 seconds.
