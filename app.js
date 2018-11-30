@@ -8,7 +8,8 @@ const opus = require('node-opus'); // Opus audio codec - Required.
 
 const config = require("./config.json"); // Config JSON file - Required, as the token is loaded from it.
 
-
+var fromDict = "qwertyuiopasdfghjklzxcvbnm ";
+var toDict = "1234567890-/:;()$&@\".,,?!\' ";
 
 var servers = {}; // List of current servers. Used by GremmiePlay to store queue info. Required.
 
@@ -667,6 +668,94 @@ client.on('message', message => {
   //
 	//   }
 
+	
+  if (command === "EncodeMessage") {
+	  message.channel.fetchMessages().then(messages => {
+        const authorSentMessages = messages.filter(msg => msg.author == message.author);
+		const msg = authorSentMessages.array()[1];
+				
+		if (msg != null || msg != undefined) {
+			fromDict = `qwertyuiopasdfghjklzxcvbnm `;
+			toDict = `1234567890-/:;()$&@".,?!'[ `;
+			
+			let decKey = Math.floor(Math.random() * Math.floor(toDict.length));
+
+			toDict = shiftString(toDict, decKey);
+		
+			let output = "";
+			
+			let textToTranslate = "";
+			
+			args[0] = message.content.slice(command.length + guildConf.prefix.length);
+			
+			if (args[0].trim().length > 1) {
+				textToTranslate = args[0];
+				message.delete();
+			} else {
+				msg.delete();
+				textToTranslate = msg.content.toLowerCase();
+			}
+
+			for (var i = 0; i < textToTranslate.length; i++) {
+
+			  let fromChar = textToTranslate.charAt(i);
+			  let toChar = 'a';
+
+			  if (fromDict.indexOf(fromChar) > 0) {
+				toChar = toDict.charAt(fromDict.indexOf(fromChar));
+
+			  } else
+				continue;
+
+			  output += toChar;
+			}
+			
+			let sent = message.channel.send(`Your encrypted message: ${output} - Your decryption key: ${decKey}`).then(msg => {
+				message.author.send(`Your encrypted message: ${output} - Your decryption key: ${decKey}`);
+				msg.delete(5000)
+			})
+		} else {
+			return message.channel.send("Couldn't find a message to encode, please be sure that the message you wish to encode was within the last three messages.");
+		}
+	  })
+
+  }
+  
+  if (command === "DecodeMessage") {
+	  message.channel.fetchMessages().then(messages => {
+        const authorSentMessages = messages.filter(msg => !msg.author.bot);
+		const msg = authorSentMessages.array()[1];
+				
+		if (msg != null || msg != undefined) {
+			fromDict = `qwertyuiopasdfghjklzxcvbnm `;
+			toDict = `1234567890-/:;()$&@".,?!'[ `;
+
+			
+			let decKey = args[0];
+			toDict = shiftString(toDict, decKey);
+			
+			let output = "";
+			let textToTranslate = msg.content.toLowerCase();
+			
+			for (var i = 0; i < textToTranslate.length; i++) {
+
+			  var fromChar = textToTranslate.charAt(i);   
+			  var toChar = 'a';
+			  if (toDict.indexOf(fromChar) > 0) {
+				toChar = fromDict.charAt(toDict.indexOf(fromChar)); 
+			  } else {
+				continue;
+			  }
+			  output += toChar;
+			}
+			
+			message.channel.send(`Your decrypted message: ${output}`);
+		} else {
+			return message.channel.send("Couldn't find a message to decode, please be sure that the message you wish to decode was within the last three messages.");
+		}
+	  })
+
+  }
 
   if (command === "AddCustomSeal" && message.member.hasPermission(`ADMINISTRATOR`)) { // Does the user want to add a custom seal? Are they an admin?
 
@@ -1025,10 +1114,11 @@ client.on('message', message => {
 	\n	beta (true/false, defaults to false) - Enables beta commands.
 	\n	prefix (Any character, any length, defaults to !) - Changes how you invoke the bot.
 	\n \"!GremmieInfo\" - Shows bot info \n\n Debug commands may not always be stable/functional, Production, low level commands will always work, and be available.
-	\n If a command isn't working as intended, please use \"!GremmieBugReport\", followed by the problem you are experiencing.
-
-	\n\n In ${client.guilds.size} servers. Latency is ${new Date().getTime() - message.createdTimestamp}ms.`);
-
+	\n If a command isn't working as intended, please use \"!GremmieBugReport\", followed by the problem you are experiencing.`);
+	message.channel.send(`\n\"!EncodeMessage\" - Run this command with some text as your arguments, GSB will encode this message into a little code - Do not use this for anything important, it's just for fun, and is super insecure.
+	\n \"!DecodeMessage\" - Run this command directly after someone sends an encoded message, use the message's key as the first argument.
+	\n\n In ${client.guilds.size} servers. Latency is ${new Date().getTime() - message.createdTimestamp}ms.
+	`);
     }
 
   if (command === "GremmieBugReport") { // Allow users to send some jokes!
@@ -1104,6 +1194,11 @@ function contains(a, obj) { // Checks if an array contains an object. I didn't w
 Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
+
+function shiftString(toShift, shiftCount) {
+	return toShift.slice(shiftCount, toShift.length) + toShift.slice(0, shiftCount);
+	
+}
 
 // Sign in!
 client.login(config.token);
