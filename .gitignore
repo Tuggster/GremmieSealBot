@@ -3,6 +3,7 @@ config.json
 log.txt
 score.sqlite
 remote.rdp
+app.js.bak
 *.bak
 
 
