@@ -35,7 +35,50 @@ We've got some commands for you to use!
   !SetSeal - Args: Seal ID (The seal you wish to select.) - Use this command to select a seal from the catalog. You must be awarded seals to purchase more seals.
 
 ---
+# Custom Modules
 
+To write a custom module for GSB, create a javascript file in the GremmiePacks folder. Give your file a creative title!
+
+## Creating a main function: 
+You're going to want to begin your module with a main function - Repeat after me:
+```
+module.exports = function(client, Discord, settings, seals, logAction) {
+  var module = {};
+  
+  module.name = "name goes here";
+  module.desc = "description goes here."
+  
+  return module;
+}
+ 
+```
+Run appv2.js by opening cmd in your GSB directory, and running ```node app.js```.
+You're looking for a message along the lines of ```Loaded module -- Module name: base -- Module description: Base GSB functionality```
+
+Assuming all goes well, you should now have a basic, functionless module that can be picked up by GSB!
+
+
+## Adding functionality
+
+Now that GSB can see your module, you're going to want to make it do something, right?
+Follow these simple steps to do just that!
+
+```
+...
+module.desc = "description goes here."
+
+module.onMessageRecieved = function(message, command, args) {
+    
+},
+...
+```
+
+In this function, you'll have access to a discord.js message object, a command, and an array of arguments.
+For inspiration, check out base.js, or partyTime.js.
+
+If you make something you think is cool, please, submit a pull request, and I'd be more than happy to check it out!
+
+---
 To add GSB to your discord server, follow this link!
 https://discordapp.com/oauth2/authorize?client_id=397089441404944394&scope=bot&permissions=0
 
