@@ -421,7 +421,7 @@ client.on('ready', () => {
 
   require('fs').readdirSync(__dirname + '/GremmiePacks').forEach(function(file) {
     if (file.match(/\.js$/) !== null && file !== 'index.js') {
-      var temp = require('./GremmiePacks/' + file)(client, Discord, settings, seals, logAction);
+      var temp = require('./GremmiePacks/' + file)(client, Discord, settings, seals, config, logAction);
 
       gremmiePacks.push(temp);
 

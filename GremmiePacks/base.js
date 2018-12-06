@@ -1,6 +1,6 @@
 const sql = require("sqlite"); // Sqlite library - Used to store user data.
 
-module.exports = function(client, Discord, settings, seals, logAction) {
+module.exports = function(client, Discord, settings, seals, config, logAction) {
 
   var module = {};
   var settings = settings;
