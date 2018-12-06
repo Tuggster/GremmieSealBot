@@ -421,7 +421,7 @@ client.on('ready', () => {
 
   require('fs').readdirSync(__dirname + '/GremmiePacks').forEach(function(file) {
     if (file.match(/\.js$/) !== null && file !== 'index.js') {
-      var temp = require('./GremmiePacks/' + file)(client, Discord, seals, logAction);
+      var temp = require('./GremmiePacks/' + file)(client, settings, Discord, seals, logAction);
 
       gremmiePacks.push(temp);
 
@@ -443,6 +443,12 @@ client.on('ready', () => {
     base.initSQL();
   else
     console.error("Couldn't prepare base module SQL.");
+
+
+  for (var i = 0; i < gremmiePacks.length; i++) { // Loop through each installed module
+    if (typeof gremmiePacks[i].onBotReady !== "undefined") // Check if the module has an onBotReady function
+     gremmiePacks[i].onBotReady(); // Call it's onBotReady function.
+  }
 });
 
 
@@ -509,7 +515,7 @@ client.on('message', message => {
 	  }
   }
 
-  // The beginning of GSB's new life! The gremmiePack.
+  // The beginning of GSB's new life! The gremmiePack - AKA module, because who needs naming consistency.
   for (var i = 0; i < gremmiePacks.length; i++) { // Loop through each installed module
     if (typeof gremmiePacks[i].onMessageRecieved !== "undefined") // Check if the module has an onMessageRecieved function
      gremmiePacks[i].onMessageRecieved(message, command, args); // Call it's onMessageRecieved function.

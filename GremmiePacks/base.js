@@ -1,9 +1,9 @@
 const sql = require("sqlite"); // Sqlite library - Used to store user data.
 
-module.exports = function(client, Discord, configInit, seals, logAction) {
+module.exports = function(client, Discord, settings, seals, logAction) {
 
   var module = {};
-  var config = configInit;
+  var settings = settings;
 
   module.name = "base";
   module.desc = "Base GSB functionality";
@@ -13,8 +13,8 @@ module.exports = function(client, Discord, configInit, seals, logAction) {
     sql.open("score.sqlite"); // This line opens the scores document.
   },
 
-  module.updateConfig = function(config) {
-    this.config = config;
+  module.updateSettings = function(settings) {
+    this.settings = settings;
   },
 
   module.onMessageRecieved = function(message, command, args) {

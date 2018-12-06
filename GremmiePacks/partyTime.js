@@ -1,13 +1,12 @@
-const sql = require("sqlite"); // Sqlite library - Used to store user data.
 // Here is a little example module I've written.
-
-
-module.exports = function(client, Discord, configInit, seals, logAction) { // Our main function - this gets run on bot startup. It'll import our client, discord object, server configurations, seals, and the logAction funct.
+module.exports = function(client, Discord, settings, seals, logAction) { // Our main function - this gets run on bot startup. It'll import our client, discord object, server configurations, seals, and the logAction funct.
 
   var module = {}; // Our module! Store functions and variables here.
 
   module.name = "partytime"; // The module's name. Make it descriptive!
   module.desc = "hell yeah borther am PARTIE TIME"; // The module's description - Make this one really descriptive!
+
+  module.onBotReady() { }, // The onBotReady function is called upon GSB's launch! While it's not used in this example, I left it here to show that it's available.
 
   module.onMessageRecieved = function(message, command, args) { // onMessageRecieved is automatically called by GSB when a message is recieved.
     console.log(`OMR tripped - ${message.content}`); // This is a debug statment to let you know that the OMR function was called.
