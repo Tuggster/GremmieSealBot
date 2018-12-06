@@ -42,7 +42,7 @@ To write a custom module for GSB, create a javascript file in the GremmiePacks f
 ## Creating a main function: 
 You're going to want to begin your module with a main function - Repeat after me:
 ```
-module.exports = function(client, Discord, settings, seals, logAction) {
+module.exports = function(client, Discord, settings, seals, config, logAction) {
   var module = {};
   
   module.name = "name goes here";
