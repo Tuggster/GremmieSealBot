@@ -503,16 +503,13 @@ client.on('message', message => {
   if (/* message.author.id == 312297956701372424 && */ message.content.includes("LOL") && guildConf.fun === "true") // Check if the message contains "LOL"
     message.channel.send("LOL"); // Respond back with LOL, to poke some fun at them.
 
-
-
-
-
   for (var i = 0; i < insults.length; i++) { // Loop through all of the possible insults
 	  if (message.content.toLowerCase().trim().includes(insults[i].toLowerCase().trim()) && guildConf.fun === "true") { // Did we find an insult in the message? If so, is fun on?
 		  message.reply(comebacks[i]); // Respond with one of our super lame comebacks!
 	  }
   }
 
+  // The beginning of GSB's new life! The gremmiePack.
   for (var i = 0; i < gremmiePacks.length; i++) { // Loop through each installed module
     if (typeof gremmiePacks[i].onMessageRecieved !== "undefined") // Check if the module has an onMessageRecieved function
      gremmiePacks[i].onMessageRecieved(message, command, args); // Call it's onMessageRecieved function.
@@ -522,7 +519,7 @@ client.on('message', message => {
 	   return; // Exit the function.
   }
 
-   //BEGIN COMMANDS!
+  //BEGIN COMMANDS!
 
 
   if(command === "SetProperty") { // This code runs when the command is SetProperty. It is used to change the server properties.

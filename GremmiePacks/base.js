@@ -36,7 +36,7 @@ module.exports = function(client, Discord, configInit, seals, logAction) {
     }
 
     if (command === "SetSeal") {
-      smodule.etSeal(message, args);
+      module.setSeal(message, args);
   	}
 
     if (command === "GremmieSeal" && message.member.roles.find("name", "Gremmie Approved")) { // Does the user have Gremmie Approval?
