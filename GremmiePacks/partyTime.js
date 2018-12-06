@@ -9,7 +9,7 @@ module.exports = function(client, Discord, settings, seals, logAction) { // Our 
   module.onBotReady() { }, // The onBotReady function is called upon GSB's launch! While it's not used in this example, I left it here to show that it's available.
 
   module.onMessageRecieved = function(message, command, args) { // onMessageRecieved is automatically called by GSB when a message is recieved.
-    console.log(`OMR tripped - ${message.content}`); // This is a debug statment to let you know that the OMR function was called.
+    //console.log(`OMR tripped - ${message.content}`); // This is a debug statment to let you know that the OMR function was called.
     if (message.content.includes("party")) { // This line checks for any message containing the word "party"
   	  module.throwParty(message); // If we find a message with party in it, run our party function.
     }
