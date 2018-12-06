@@ -60,6 +60,10 @@ module.exports = function(client, Discord, settings, seals, logAction) {
   	  message.react("❌"); // Add the reactions, they look cool!
     }
 
+    if (command === "GremmieStats") { // Allow a user to get their stats.
+      base.gremmieStats(message);
+    }
+
 
   },
 

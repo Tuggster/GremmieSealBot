@@ -739,9 +739,7 @@ client.on('message', message => {
     console.log("Joke Dispensed!"); // Log it.
   }
 
-  if (command === "GremmieStats") { // Allow a user to get their stats.
-  	base.gremmieStats(message);
-  }
+
 
   if (command === "ForceGremmieJoke" && guildConf.fun === "true") { // Allows the user to force a specific joke.
     var parsedJoke = jokes[parseInt(args[0], 10)]; // Parse the joke number!
