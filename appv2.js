@@ -421,7 +421,7 @@ client.on('ready', () => {
 
   require('fs').readdirSync(__dirname + '/GremmiePacks').forEach(function(file) {
     if (file.match(/\.js$/) !== null && file !== 'index.js') {
-      var temp = require('./GremmiePacks/' + file)(client, settings, Discord, seals, logAction);
+      var temp = require('./GremmiePacks/' + file)(client, Discord, settings, seals, logAction);
 
       gremmiePacks.push(temp);
 
@@ -773,7 +773,7 @@ client.on('message', message => {
 	\n \"!SetSeal\" - Sets the user's GremmieSeal. Type \"!SetSeal\" followed by the seal's id. You can get it's ID with !SealCatalog
 	\n \"!GiveSeals\" (TurboLish Only) - Gives the mentioned user a set amount of seals. Ex: \"!GiveSeals @FrickinHecker#5233 | 6\" Write the amount of seals after the mention, seperated by a \"|\"
 	\n \"!AddCustomSeal\" (Admin Only) - Adds a custom seal, only available on your server. Syntax: \`!AddCustomSeal ID (1-3) | IMAGE LINK | PRICE\`
-	\n \"!SetProperrty\" (Admin Only) - Sets a server property. These change how the bot will behave in your server.
+	\n \"!SetProperty\" (Admin Only) - Sets a server property. These change how the bot will behave in your server.
 	\n	fun (true/false, defaults to true) - Enables fun commands, like !GremmieJoke.
 	\n	beta (true/false, defaults to false) - Enables beta commands.
 	\n	prefix (Any character, any length, defaults to !) - Changes how you invoke the bot.
