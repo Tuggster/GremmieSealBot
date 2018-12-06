@@ -513,16 +513,17 @@ client.on('message', message => {
 	  }
   }
 
+  for (var i = 0; i < gremmiePacks.length; i++) { // Loop through each installed module
+    if (typeof gremmiePacks[i].onMessageRecieved !== "undefined") // Check if the module has an onMessageRecieved function
+     gremmiePacks[i].onMessageRecieved(message, command, args); // Call it's onMessageRecieved function.
+  }
+
   if (!message.content.startsWith(guildConf.prefix)) { // At this point, we're done with all of the goofy stuff, and we can stop if the message doesn't start with your selected prefix.
 	   return; // Exit the function.
-   }
+  }
 
    //BEGIN COMMANDS!
 
-   for (var i = 0; i < gremmiePacks.length; i++) { // Loop through each installed module
-     if (typeof gremmiePacks[i].onMessageRecieved !== "undefined") // Check if the module has an onMessageRecieved function
-      gremmiePacks[i].onMessageRecieved(message, command, args); // Call it's onMessageRecieved function.
-   }
 
   if(command === "SetProperty") { // This code runs when the command is SetProperty. It is used to change the server properties.
 	  console.log(`Value 1: ${args[0]}, Value 2: ${args[1]}`) // Log the command's arguments.
