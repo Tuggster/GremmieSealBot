@@ -6,7 +6,7 @@ module.exports = function(client, Discord, settings, seals, logAction) { // Our 
   module.name = "partytime"; // The module's name. Make it descriptive!
   module.desc = "hell yeah borther am PARTIE TIME"; // The module's description - Make this one really descriptive!
 
-  module.onBotReady() { }, // The onBotReady function is called upon GSB's launch! While it's not used in this example, I left it here to show that it's available.
+  module.onBotReady = function() { }, // The onBotReady function is called upon GSB's launch! While it's not used in this example, I left it here to show that it's available.
 
   module.onMessageRecieved = function(message, command, args) { // onMessageRecieved is automatically called by GSB when a message is recieved.
     //console.log(`OMR tripped - ${message.content}`); // This is a debug statment to let you know that the OMR function was called.
