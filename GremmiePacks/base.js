@@ -1,9 +1,9 @@
 const sql = require("sqlite"); // Sqlite library - Used to store user data.
 
-module.exports = function(client, Discord, seals, logAction) {
+module.exports = function(client, Discord, configInit, seals, logAction) {
 
   var module = {};
-
+  var config = configInit;
 
   module.name = "base";
   module.desc = "Base GSB functionality";
@@ -11,6 +11,56 @@ module.exports = function(client, Discord, seals, logAction) {
   module.initSQL = function() {
 
     sql.open("score.sqlite"); // This line opens the scores document.
+  },
+
+  module.updateConfig = function(config) {
+    this.config = config;
+  },
+
+  module.onMessageRecieved = function(message, command, args) {
+
+    if (command === "PatchNotes") { // If the user wants patchnotes, hand them over!
+  	  module.patchNotes(message);
+    }
+
+    if (command === "GremmieInfo") { // If the user wants info, hand it over!
+      module.gremmieInfo(message);
+    }
+
+    if (command === "GremmieFarewell") { // allow users to send GremmieFarewell messages.
+  	  module.gremmieFarewell(message);
+    }
+
+    if (command === "SealCatalog" || command === "GremmieCatalog") { // Let the user fetch the list of seals.
+      module.gremmieCatalog(message);
+    }
+
+    if (command === "SetSeal") {
+      smodule.etSeal(message, args);
+  	}
+
+    if (command === "GremmieSeal" && message.member.roles.find("name", "Gremmie Approved")) { // Does the user have Gremmie Approval?
+      module.gremmieSeal(message);
+    } else {
+      if ((message.content.startsWith("!GremmieSeal") && !message.member.roles.find("name", "Gremmie Approved"))) { // If the user isn's Gremmie Approved, throw a big fit.
+        message.reply("Sorry, but it looks like you aren't Gremmie Approved.");
+        logAction("Unauthorized user attempted to dispense seal - User: " + message.author.username);
+        console.log("Unauthorized user attempted to dispense seal - User: " + message.author.username);
+      }
+    }
+
+    if (command === "GiveSeals" && contains(config.turbolish, message.author.id)) { // Lets users mass send seals.
+      module.giveSeals(message);
+    }
+
+    if (command === "GremmieSays" && contains(config.turbolish, message.author.id) && guildConf.fun === "true") { // Lets turbolish users impersonate GSB.
+      module.gremmieSays(message);
+    } else if (command === "GremmieSays" && !contains(config.turbolish, message.author.id)) { // If the user doesn't have permissions, tell them!
+  	  message.channel.send("Sorry, but this command requires TurboLish level GremmieClearance to use.");
+  	  message.react("❌"); // Add the reactions, they look cool!
+    }
+
+
   },
 
   module.patchNotes = function (message) {
@@ -26,10 +76,10 @@ module.exports = function(client, Discord, seals, logAction) {
 
   module.gremmieFarewell = function(message) {
     if (message.mentions.members.first() != undefined) // If there is a mention in the message, include it in the GremmieFarewell.
-    message.channel.send(`Minion's blessing. ${message.mentions.members.first()} https://i.imgur.com/af19I27.jpg`);
+      message.channel.send(`Minion's blessing. ${message.mentions.members.first()} https://i.imgur.com/af19I27.jpg`);
 
     if (message.mentions.members.first() === undefined) // if there is no mention in the message, send a blank GremmieFarewell.
-    message.channel.send(`Minion's blessing. https://i.imgur.com/af19I27.jpg`);
+      message.channel.send(`Minion's blessing. https://i.imgur.com/af19I27.jpg`);
   },
 
   module.gremmieCatalog = function(message) {

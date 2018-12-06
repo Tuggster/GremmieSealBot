@@ -449,6 +449,9 @@ client.on('ready', () => {
 // This function is the heart of GSB. All of his commands go here. This function is called whenever a message is recieved by the bot.
 client.on('message', message => {
 
+  var row; // Declare a generic row variable for use with SQl based code later.
+
+
    // If the message was direct, take action!
    if (message.channel.type === "dm") {
 	    dmCode(message);
@@ -516,12 +519,10 @@ client.on('message', message => {
 
    //BEGIN COMMANDS!
 
-
-  // If the user wants patchnotes, hand them over!
-  if (command === "PatchNotes") {
-	  base.patchNotes(message);
-
-  }
+   for (var i = 0; i < gremmiePacks.length; i++) { // Loop through each installed module
+     if (typeof gremmiePacks[i].onMessageRecieved !== "undefined") // Check if the module has an onMessageRecieved function
+      gremmiePacks[i].onMessageRecieved(message, command, args); // Call it's onMessageRecieved function.
+   }
 
   if(command === "SetProperty") { // This code runs when the command is SetProperty. It is used to change the server properties.
 	  console.log(`Value 1: ${args[0]}, Value 2: ${args[1]}`) // Log the command's arguments.
@@ -608,11 +609,6 @@ client.on('message', message => {
   			  message.reply("Sorry, to use this command, you must have the \"Gremmie DJ\" role.");
   		  }
     }
-  }
-
-
-  if (command === "GremmieInfo") { // If the user wants info, hand it over!]
-    base.gremmieInfo(message);
   }
 
   if (command === "SqlDelete" && contains(config.turbolish, message.author.id)) { // If a turbolish user wants to remove some SQL data, let them!
@@ -716,43 +712,8 @@ client.on('message', message => {
 		}
 	}
 
-
-
-
-
-  var row; // Declare a generic row variable for use with SQl based code later.
-
-
-
-  if (command === "GremmieFarewell" && guildConf.fun === "true") { // If the server has fun on, allow users to send GremmieFarewell messages.
-	  base.gremmieFarewell(message);
-  }
-
-  // Let the user fetch the list of seals.
-  if (command === "SealCatalog" || command === "GremmieCatalog") {
-    base.gremmieCatalog(message);
-  }
-
-
   // Add a dynamic joke - This one mentions a random person
   jokes[jokes.length] = `${pickRandomFromArray(message.channel.members.array()).displayName} is a rart XDDDD`;
-
-
-  // Does the user want to select their new GremmieSeal?
-  if (command === "SetSeal") {
-    base.setSeal(message, args);
-	}
-
-  // Here's the first command ever written. It's formatting is funky, but it works! It gives out GremmieSeals.
-  if (command === "GremmieSeal" && message.member.roles.find("name", "Gremmie Approved")) { // Does the user have Gremmie Approval?
-    base.gremmieSeal(message);
-  } else {
-    if ((message.content.startsWith("!GremmieSeal") && !message.member.roles.find("name", "Gremmie Approved"))) { // If the user isn's Gremmie Approved, throw a big fit.
-      message.reply("Sorry, but it looks like you aren't Gremmie Approved.");
-      logAction("Unauthorized user attempted to dispense seal - User: " + message.author.username);
-      console.log("Unauthorized user attempted to dispense seal - User: " + message.author.username);
-    }
-  }
 
   if (command === "TerminateGremmie" && contains(config.turbolish, message.author.id)) { // If a TurboLish level user wants to shut down the bot, let them! They're turbolish, after all.
     message.channel.send("Goodbye! GremmieSealBot is shutting down.");
@@ -767,17 +728,6 @@ client.on('message', message => {
     }
   }
 
-  if (command === "GiveSeals" && contains(config.turbolish, message.author.id)) { // Lets users mass send seals.
-    base.giveSeals(message);
-  }
-
-  if (command === "GremmieSays" && contains(config.turbolish, message.author.id) && guildConf.fun === "true") { // Lets turbolish users impersonate GSB.
-    base.GremmieSays(message);
-  } else if (command === "GremmieSays" && !contains(config.turbolish, message.author.id)) { // If the user doesn't have permissions, tell them!
-	  message.channel.send("Sorry, but this command requires TurboLish level GremmieClearance to use.");
-	  message.react("❌"); // Add the reactions, they look cool!
-  }
-
   if (command === "GremmieJoke" && guildConf.fun === "true") { // Makes GSB tell jokes!
 
     var pickedJoke = pickRandomFromArray(jokes); // Grab a random jokes from the jokes list.
@@ -789,12 +739,11 @@ client.on('message', message => {
   	base.gremmieStats(message);
   }
 
-
   if (command === "ForceGremmieJoke" && guildConf.fun === "true") { // Allows the user to force a specific joke.
     var parsedJoke = jokes[parseInt(args[0], 10)]; // Parse the joke number!
         message.channel.send(parsedJoke).catch(() => { // Send the joke.
-        message.channel.send("That joke has an empty value, or does not exist.") // If it doesn't exist, abort!
-    });
+          message.channel.send("That joke has an empty value, or does not exist.") // If it doesn't exist, abort!
+        });
 
   }
 
