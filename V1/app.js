@@ -443,7 +443,7 @@ client.on('message', message => {
    if (randomNumber == 1) { // Check if it's 1
      let responses = [ "Hello? Can anybody hear me?", "Testing Testing 1 2 3" ]; // Get some responses
      let Response = pickRandomFromArray(responses); // Get the primary response
-	
+
      message.channel.send(Response); // Send the response
 	 message.channel.send({embed: { // Send the Cyberbot embed.
 		color: 0xfff542,
@@ -456,7 +456,7 @@ client.on('message', message => {
 	   if (message.guild.members.get(`${client.user.id}`).hasPermission(`MANAGE_MESSAGES`)) { // See if the bot can delete the user's message. We need to do this to regurgitate it.
 		  message.channel.send(message.content); // Echo back the user's message.
 
-		  message.react("✔").then(); // Respind with a check mark emoji - it looks cool.
+		  message.react("✔").then(); // Respond with a check mark emoji - it looks cool.
 		  message.delete(250); // Quickly delete the message. I don't do it instantly, because if it was instant, you wouldn't be able to see the checkmark.
 	  } else { // If we can't delete the message, abort!
 		  message.channel.send("That action could not be completed elegantly with the given permissions.").then(mes => mes.delete(5000)); // Tell them the command failed, and delete the failure message after 5 seconds.
@@ -503,7 +503,7 @@ client.on('message', message => {
 	   try {
 		eval(message.content.slice(command.length + 2));
 	   } catch (err) {
-		   message.reply(err)
+		   message.reply(err);
 	   }
 	   message.delete();
    }
@@ -727,25 +727,35 @@ client.on('message', message => {
   }
 
   // Let the user fetch the list of seals.
-  if (command === "SealCatalog" || command === "!GremmieCatalog") {
+  if (command === "SealCatalog" || command === "GremmieCatalog") {
     message.channel.send("These are all of the available seals. To select a seal, you must have a received Gremmies count greater than or equal to the seals price. If this condition is met, you then type \"!SetSeal\" followed by the seal's ID. To find it's ID, count it's position in the catalog, starting from 0. To find the ID of a custom seal, look at it's catalog entry. It will contain it's ID. Please include the - when purchasing them, as it is required to tell the standard seals apart from the custom seals."); // Send some info about the catalog.
-    for (var i = 0; i < seals.length; i++) {
-      message.channel.send(seals[i]); // Loop through all of the built-in system seals, and send them.
-    }
 
-    // Grab the server's custom seal page.
-  	sql.get(`SELECT * FROM seals WHERE serverID ="${message.channel.guild.id}"`).then(row => {
-  		if (row.slot1 != "") // If the first slot is in use, send it's contents.
-  			message.channel.send(row.slot1);
+    const embed = new Discord.RichEmbed() // Create a new RichEmbed.
+	  .setTitle("Today's GremmieSeal Catalog") // Set the embed's title.
+	  .setAuthor(client.user.username, client.user.avatarURL) // Set it's author, and avatar.
+	  .setDescription("Our seals:") // Give it a description.
+	  .setColor(0x7f0026); // Set it's color to a nice crimson.
 
-  		if (row.slot2 != "") // If the second slot is in use, send it's contents.
-  			message.channel.send(row.slot2);
+		for (var i = 0; i < seals.length; i++) {
+		  embed.addField(`Seal #${i}`, `${seals[i]}`); // Loop through each seal, and add it's value to the embed.
+		}
 
-  		if (row.slot3 != "") // If the third slot is in use, send it's contents.
-  			message.channel.send(row.slot3);
+		// Grab the server's custom seal page.
+		sql.get(`SELECT * FROM seals WHERE serverID ="${message.channel.guild.id}"`).then(row => {
+		  if (row.slot1 != "") // If the first slot is in use, send it's contents.
+			embed.addField(`Custom Seal #1`, `${row.slot1}`);
 
 
-  	});
+		  if (row.slot2 != "") // If the second slot is in use, send it's contents.
+			embed.addField(`Custom Seal #2`, `${row.slot2}`);
+
+		  if (row.slot3 != "") // If the third slot is in use, send it's contents.
+			embed.addField(`Custom Seal #3`, `${row.slot3}`);
+		});
+
+	  return message.channel.send({embed}); // Send the embed.
+
+
 
   	return;
   }
