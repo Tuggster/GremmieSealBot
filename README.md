@@ -69,7 +69,7 @@ module.desc = "description goes here."
 
 module.onMessageRecieved = function(message, command, args) {
     
-},
+}
 ...
 ```
 
