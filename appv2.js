@@ -35,6 +35,9 @@ const defaultSettings = { // Settings template for new servers.
   // custom
 // }
 
+// Sign in!
+client.login(config.token);
+
 
 function stopMusic(message) { // Stops music playback, beta mode, unstable
 	var server = servers[message.channel.guild.id]; // Get the object for the current server.
@@ -357,12 +360,10 @@ function mentionConversation(message, mention) {
 
 
 
-
 // This code runs as soon as GSB is signed in to it's discord account.
 client.once('ready', () => {
-
   // Check if there is a token in the config file.
-  if (config.token != "") {
+  if (typeof config.token != undefined) {
     let tokenObscured = ``; // Create a blank string for the obscured token to go into.
     for (let i = 0; i < config.token.length; i++) { // Loop through each character in the token.
       if (i < config.token.length - 10) { // If the current character isn't one of the last ten characters, continue.
@@ -856,6 +857,3 @@ function contains(a, obj) { // Checks if an array contains an object. I didn't w
 Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
-
-// Sign in!
-client.login(config.token);
