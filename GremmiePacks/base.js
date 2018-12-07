@@ -9,7 +9,6 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
   module.desc = "Base GSB functionality";
 
   module.initSQL = function() {
-
     sql.open("score.sqlite"); // This line opens the scores document.
   },
 
@@ -21,10 +20,6 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
 
     if (command === "PatchNotes") { // If the user wants patchnotes, hand them over!
   	  module.patchNotes(message);
-    }
-
-    if (command === "GremmieInfo") { // If the user wants info, hand it over!
-      module.gremmieInfo(message);
     }
 
     if (command === "GremmieFarewell") { // allow users to send GremmieFarewell messages.
@@ -74,8 +69,28 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
     });
   },
 
-  module.gremmieInfo = function (message) {
-    message.reply(`GremmieSealBot is currently active in ${client.guilds.size} servers. Latency is ${new Date().getTime() - message.createdTimestamp} ms.\nProudly serving ${client.users.size} users. Uptime is ${Math.trunc(client.uptime / 1000 / 60)} minutes, or ${Math.trunc(client.uptime / 1000 / 60 / 60)} hours`);
+  module.gremmieInfo = function (message, modules) {
+    //message.reply(`GremmieSealBot is currently active in ${client.guilds.size} servers. Latency is ${new Date().getTime() - message.createdTimestamp} ms.\nProudly serving ${client.users.size} users. Uptime is ${Math.trunc(client.uptime / 1000 / 60)} minutes, or ${Math.trunc(client.uptime / 1000 / 60 / 60)} hours`);
+
+    const embed = new Discord.RichEmbed() // Create a new RichEmbed.
+    .setTitle("GremmieInfo") // Set the embed's title.
+    .setAuthor(client.user.username, client.user.avatarURL) // Set it's author, and avatar.
+    .setDescription("What's up with GSB?") // Give it a description.
+    .setColor(0x7f0026); // Set it's color to a nice crimson.
+
+    embed.addField(`Ping`, `${new Date().getTime() - message.createdTimestamp} ms`); // Add the ping
+    embed.addField(`Active Servers`, `${client.guilds.size} servers`); // Add the server count
+    embed.addField(`Users`, `${client.users.size} users`); // Add the user count
+    embed.addField(`Loaded Modules`, `${modules.length} modules`); // Add the user count
+
+
+    for (var i = 0; i < modules.length; i++) {
+      embed.addField(`Module #${i}`, `Name: ${modules[i].name} -- Description: ${modules[i].desc}`);
+    }
+
+
+    return message.channel.send({embed}); // Send the embed.
+
   },
 
   module.gremmieFarewell = function(message) {

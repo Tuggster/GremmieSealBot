@@ -162,7 +162,7 @@ function getRandomIntInclusive(min, max) { // This code wasn't written by me. I 
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// The list of GremmieSeals! Formatting is as follows - "SEAL LINK |SEAL PRICE| DESCRIPTION" - Normally, the description shows the price, and seal's ID. A seal's ID is it's position in the array, starting from zero.
+// The list of GremmieSeals! Formatting is as follows - "SEAL LINK | SEAL PRICE | DESCRIPTION" - Normally, the description shows the price, and seal's ID. A seal's ID is it's position in the array, starting from zero.
 var seals = ["https://i.imgur.com/LkP71Kr.png |0| Price: 0 - ID: 0", "https://i.imgur.com/nK3Wee5.png |25| Price: 25 - ID: 1", "https://i.imgur.com/35KMlDe.png |35| Price: 35 - ID: 2", "https://i.imgur.com/WKomEDw.png |35| Price: 35 - ID: 3", "https://i.imgur.com/WfSzveW.png | 420 | Price: 420 - ID: 4 | 2018 April 1st joke -- It costs 420, LOL XD"]
 
 // A library of jokes for GSB to tell!
@@ -422,9 +422,7 @@ client.on('ready', () => {
   require('fs').readdirSync(__dirname + '/GremmiePacks').forEach(function(file) {
     if (file.match(/\.js$/) !== null && file !== 'index.js') {
       var temp = require('./GremmiePacks/' + file)(client, Discord, settings, seals, config, logAction);
-
       gremmiePacks.push(temp);
-
       i++;
     }
   });
@@ -527,6 +525,9 @@ client.on('message', message => {
 
   //BEGIN COMMANDS!
 
+  if (command === "GremmieInfo" && typeof base.gremmieInfo !== undefined) { // If the user wants info, hand it over!
+    base.gremmieInfo(message, gremmiePacks);
+  }
 
   if(command === "SetProperty") { // This code runs when the command is SetProperty. It is used to change the server properties.
 	  console.log(`Value 1: ${args[0]}, Value 2: ${args[1]}`) // Log the command's arguments.
