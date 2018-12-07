@@ -359,7 +359,7 @@ function mentionConversation(message, mention) {
 
 
 // This code runs as soon as GSB is signed in to it's discord account.
-client.on('ready', () => {
+client.once('ready', () => {
 
   // Check if there is a token in the config file.
   if (config.token != "") {
