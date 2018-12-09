@@ -2,10 +2,10 @@ const express = require(`express`);
 var app = express();
 
 app.get('/data', function(req, res){
-  res.send('Testing, 123!'); 
+  res.send('Testing, 123!');
 });
 
-app.listen(3000);
+app.listen(80);
 
 module.exports = function() {
 
