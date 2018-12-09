@@ -1,7 +1,7 @@
 const express = require(`express`);
 var app = express();
 
-app.get('/data', function(req, res){
+app.get('/data', function(req, res, next) {
   res.send('Testing, 123!');
 });
 
