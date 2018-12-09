@@ -9,8 +9,6 @@ app.use(function(req, res, next) {
 });
 
 app.get('/data', function(req, res, next) {
-  res.__setitem__("Access-Control-Allow-Origin", "*")
-
   res.send('Testing, 123!');
 });
 
