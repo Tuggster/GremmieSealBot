@@ -23,8 +23,6 @@ const Provider = require('enmap-sqlite'); // One of Enmap's denendancies.
 const settings = new Enmap({provider: new Provider({name: "settings"})}); // Enmap settings object
 
 
-
-
 const defaultSettings = { // Settings template for new servers.
   prefix: "!", // The prefix that GSB responds to
   fun: "true", // Is fun mode on?
@@ -422,7 +420,7 @@ client.once('ready', () => {
 
   require('fs').readdirSync(__dirname + '/GremmiePacks').forEach(function(file) {
     if (file.match(/\.js$/) !== null && file !== 'index.js') {
-      var temp = require('./GremmiePacks/' + file)(client, Discord, settings, seals, config, logAction);
+      var temp = require('./GremmiePacks/' + file)();
       gremmiePacks.push(temp);
       i++;
     }
@@ -434,7 +432,37 @@ client.once('ready', () => {
     if (mod.name === "base")
       base = mod;
 
-    console.log(`Loaded module -- Module name: ${mod.name} -- Module description: ${mod.desc}`)
+    var argsOut = [];
+    if (typeof mod.loadData !== "undefined") {
+      let dataArgs = getParamNames(mod.loadData);
+      for (var i = 0; i < dataArgs.length; i++) {
+        let arg = dataArgs[i];
+
+        if (arg == "discord")
+          argsOut.push(Discord);
+
+        if (arg == "client")
+          argsOut.push(client);
+
+        if (arg == "modules")
+          argsOut.push(gremmiePacks);
+
+        if (arg == "settings")
+          argsOut.push(settings);
+
+        if (arg == "seals")
+          argsOut.push(seals);
+
+        if (arg == "logAction")
+          argsOut.push(logAction);
+      }
+
+      mod.loadData.apply(this, argsOut);
+      console.log(`Loaded module -- Module name: ${mod.name} -- Module description: ${mod.desc}`)
+    } else {
+      console.log(`Loaded module without sending data pack. This module may not be able to communicate with GSB. -- Module name: ${mod.name} -- Module description: ${mod.desc}`)
+    }
+
 
   }
 
@@ -526,9 +554,7 @@ client.on('message', message => {
 
   //BEGIN COMMANDS!
 
-  if (command === "GremmieInfo" && typeof base.gremmieInfo !== undefined) { // If the user wants info, hand it over!
-    base.gremmieInfo(message, gremmiePacks);
-  }
+
 
   if(command === "SetProperty") { // This code runs when the command is SetProperty. It is used to change the server properties.
 	  console.log(`Value 1: ${args[0]}, Value 2: ${args[1]}`) // Log the command's arguments.
@@ -857,3 +883,13 @@ function contains(a, obj) { // Checks if an array contains an object. I didn't w
 Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
+
+var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+var ARGUMENT_NAMES = /([^\s,]+)/g;
+function getParamNames(func) {
+  var fnStr = func.toString().replace(STRIP_COMMENTS, '');
+  var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+  if(result === null)
+     result = [];
+  return result;
+}

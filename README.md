@@ -42,8 +42,28 @@ To write a custom module for GSB, create a javascript file in the GremmiePacks f
 ## Creating a main function: 
 You're going to want to begin your module with a main function - Repeat after me:
 ```
-module.exports = function(client, Discord, settings, seals, config, logAction) {
+module.exports = function() {
   var module = {};
+  
+  var data = { // This variable contains everything you'd like to import from GSB. This example has every option in it, please, only use what you need.
+    client: undefined, // The discord client object.
+    discord: undefined, // The discord object
+    settings: undefined, // The settings object - enmap
+    modules: undefined, // The modules object - stores all of the modules!
+    seals: undefined, // All of GSB's seals!
+    logAction: undefined // The function to log data to GSB's log file. Only import this if you really need this.
+  } 
+  module.data = data; // It's nice to share!
+
+
+  module.loadData = function(client, discord, settings, modules, seals, logAction) { // This is what GSB calls to load in all of the data! Only put what you've got in data. The order doesn't matter, as long as you spell everything right.
+    data.client = client;
+    data.discord = discord;
+    data.settings = settings;
+    data.modules = modules;
+    data.seals = seals;
+    data.logAction = logAction;
+  }
   
   module.name = "name goes here";
   module.desc = "description goes here."
@@ -52,10 +72,12 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
 }
  
 ```
-Run appv2.js by opening cmd in your GSB directory, and running ```node app.js```.
+Run appv2.js by opening cmd in your GSB directory, and running ```node appv2.js```.
 You're looking for a message along the lines of ```Loaded module -- Module name: base -- Module description: Base GSB functionality```
 
 Assuming all goes well, you should now have a basic, functionless module that can be picked up by GSB!
+
+You don't need that data variable, that's just how I choose to store my module data.
 
 
 ## Adding functionality
