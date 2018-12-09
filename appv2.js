@@ -486,14 +486,14 @@ client.on('message', message => {
 
 
    // If the message was direct, take action!
-   if (message.channel.type === "dm") {
+    if (message.channel.type === "dm") {
 	    dmCode(message);
       return;
     }
 
    // If GSB was mentioned, take action!
    if (message.mentions.members != undefined) {
-	   if (message.mentions.members.first() == client.user) {
+	   if (message.isMentioned(client.user)) {
 		   mentionConversation(message, true);
 		   return;
 	   }
@@ -531,7 +531,14 @@ client.on('message', message => {
 
   // Back in April of 2018, there was an excellent joke feature - @someone. It mentioned a random user, and it was quite cool, but got removed.
   if (message.content.includes("@someone")) // Check if the message includes @someone
-    message.reply(`Random user selected - ${message.channel.members.random()}`); // Pick a random user, and mention them
+    var count = (message.content.match(/@someone/g) || []).length;
+    var users = message.channel.members;
+
+    for (var i = 0; i < count; i++) {
+      var user = users.random();
+      message.reply(`Random user selected - ${user}`); // Pick a random user, and mention them
+      users.find(`id`, user);
+    }
 
   if (/* message.author.id == 312297956701372424 && */ message.content.includes("LOL") && guildConf.fun === "true") // Check if the message contains "LOL"
     message.channel.send("LOL"); // Respond back with LOL, to poke some fun at them.
@@ -545,7 +552,7 @@ client.on('message', message => {
   // The beginning of GSB's new life! The gremmiePack - AKA module, because who needs naming consistency.
   for (var i = 0; i < gremmiePacks.length; i++) { // Loop through each installed module
     if (typeof gremmiePacks[i].onMessageRecieved !== "undefined") // Check if the module has an onMessageRecieved function
-     gremmiePacks[i].onMessageRecieved(message, command, args); // Call it's onMessageRecieved function.
+      gremmiePacks[i].onMessageRecieved(message, command, args); // Call it's onMessageRecieved function.
   }
 
   if (!message.content.startsWith(guildConf.prefix)) { // At this point, we're done with all of the goofy stuff, and we can stop if the message doesn't start with your selected prefix.
@@ -580,7 +587,7 @@ client.on('message', message => {
 				  .setDescription("Properties:") // Give it a description.
 				  .setColor(0x00ce71); // Set it's color to a nice green.
 				  Object.keys(guildConf).forEach(key => {
-					embed.addField(key, `${guildConf[key]}`); // Loop through each key, and add it's value to the embed.
+					  embed.addField(key, `${guildConf[key]}`); // Loop through each key, and add it's value to the embed.
 				  });
 
 				return message.channel.send({embed}); // Send the embed.
