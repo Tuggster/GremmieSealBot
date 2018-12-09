@@ -3,6 +3,9 @@ var cors = require('cors')
 var app = express();
 
 app.get('/data', cors(), function (req, res, next) {
+app.get('/data', function(req, res, next) {
+  res.__setitem__("Access-Control-Allow-Origin", "*")
+
   res.send('Testing, 123!');
 });
 
