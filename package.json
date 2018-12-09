@@ -14,6 +14,7 @@
     "discord.js": "^11.3.2",
     "enmap": "^2.6.3",
     "enmap-sqlite": "^2.0.3",
+    "express": "^4.16.4",
     "fluent-ffmpeg": "^2.1.2",
     "fortnite": "^3.0.1",
     "html-entities": "^1.2.1",
