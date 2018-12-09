@@ -2,10 +2,8 @@ const express = require(`express`);
 var cors = require('cors')
 var app = express();
 
-app.get('/data', function(req, res, next) {
-  console.log("Incoming request!");
+app.get('/data', cors(), function (req, res, next) {
   res.send('Testing, 123!');
-  res.
 });
 
 app.listen(3000);
