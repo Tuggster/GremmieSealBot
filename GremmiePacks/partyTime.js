@@ -1,7 +1,17 @@
 // Here is a little example module I've written.
-module.exports = function(client, Discord, settings, seals, config, logAction) { // Our main function - this gets run on bot startup. It'll import our client, discord object, server configurations, seals, and the logAction funct.
+module.exports = function() { // Our main function - this gets run on bot startup. It'll import our client, discord object, server configurations, seals, and the logAction funct.
 
   var module = {}; // Our module! Store functions and variables here.
+
+  var data = {
+    client: undefined,
+    discord: undefined
+  }
+
+  module.loadData = function(client, discord) {
+    data.client = client;
+    data.discord = discord;
+  }
 
   module.name = "partytime"; // The module's name. Make it descriptive!
   module.desc = "hell yeah borther am PARTIE TIME"; // The module's description - Make this one really descriptive!

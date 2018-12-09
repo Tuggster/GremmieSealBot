@@ -1,12 +1,35 @@
 const sql = require("sqlite"); // Sqlite library - Used to store user data.
 
-module.exports = function(client, Discord, settings, seals, config, logAction) {
+module.exports = function() {
 
   var module = {};
+
+
+  var data = {
+    client: undefined,
+    discord: undefined,
+    settings: undefined,
+    modules: undefined,
+    seals: undefined,
+    logAction: undefined
+  }
+
+
+  module.loadData = function(client, discord, settings, modules, seals, logAction) {
+    data.client = client;
+    data.discord = discord;
+    data.settings = settings;
+    data.modules = modules;
+    data.seals = seals;
+    data.logAction = logAction;
+  }
+
+
   var settings = settings;
 
   module.name = "base";
   module.desc = "Base GSB functionality";
+
 
   module.initSQL = function() {
     sql.open("score.sqlite"); // This line opens the scores document.
@@ -30,9 +53,19 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
       module.gremmieCatalog(message);
     }
 
+    if (command === "EncodeMessage")
+      module.encodeMessage(message, args, command);
+
+    if (command === "DecodeMessage")
+      module.decodeMessage(message, args, command);
+
     if (command === "SetSeal") {
       module.setSeal(message, args);
   	}
+
+    if (command === "GremmieInfo") {
+      module.gremmieInfo(message, data.modules);
+    }
 
     if (command === "GremmieSeal" && message.member.roles.find("name", "Gremmie Approved")) { // Does the user have Gremmie Approval?
       module.gremmieSeal(message);
@@ -48,7 +81,7 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
       module.giveSeals(message);
     }
 
-    if (command === "GremmieSays" && contains(config.turbolish, message.author.id) && guildConf.fun === "true") { // Lets turbolish users impersonate GSB.
+    if (command === "GremmieSays" && contains(config.turbolish, message.author.id) && config.fun === "true") { // Lets turbolish users impersonate GSB.
       module.gremmieSays(message);
     } else if (command === "GremmieSays" && !contains(config.turbolish, message.author.id)) { // If the user doesn't have permissions, tell them!
   	  message.channel.send("Sorry, but this command requires TurboLish level GremmieClearance to use.");
@@ -56,7 +89,7 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
     }
 
     if (command === "GremmieStats") { // Allow a user to get their stats.
-      base.gremmieStats(message);
+      module.gremmieStats(message);
     }
 
 
@@ -69,23 +102,23 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
     });
   },
 
-  module.gremmieInfo = function (message, modules) {
+  module.gremmieInfo = function (message) {
     //message.reply(`GremmieSealBot is currently active in ${client.guilds.size} servers. Latency is ${new Date().getTime() - message.createdTimestamp} ms.\nProudly serving ${client.users.size} users. Uptime is ${Math.trunc(client.uptime / 1000 / 60)} minutes, or ${Math.trunc(client.uptime / 1000 / 60 / 60)} hours`);
 
-    const embed = new Discord.RichEmbed() // Create a new RichEmbed.
+    const embed = new data.discord.RichEmbed() // Create a new RichEmbed.
     .setTitle("GremmieInfo") // Set the embed's title.
-    .setAuthor(client.user.username, client.user.avatarURL) // Set it's author, and avatar.
+    .setAuthor(data.client.user.username, data.client.user.avatarURL) // Set it's author, and avatar.
     .setDescription("What's up with GSB?") // Give it a description.
     .setColor(0x7f0026); // Set it's color to a nice crimson.
 
     embed.addField(`Ping`, `${new Date().getTime() - message.createdTimestamp} ms`); // Add the ping
-    embed.addField(`Active Servers`, `${client.guilds.size} servers`); // Add the server count
-    embed.addField(`Users`, `${client.users.size} users`); // Add the user count
-    embed.addField(`Loaded Modules`, `${modules.length} modules`); // Add the user count
+    embed.addField(`Active Servers`, `${data.client.guilds.size} servers`); // Add the server count
+    embed.addField(`Users`, `${data.client.users.size} users`); // Add the user count
+    embed.addField(`Loaded Modules`, `${data.modules.length} modules`); // Add the user count
 
 
-    for (var i = 0; i < modules.length; i++) {
-      embed.addField(`Module #${i}`, `Name: ${modules[i].name} -- Description: ${modules[i].desc}`);
+    for (var i = 0; i < data.modules.length; i++) {
+      embed.addField(`Module #${i}`, `Name: ${data.modules[i].name} -- Description: ${data.modules[i].desc}`);
     }
 
 
@@ -104,14 +137,14 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
   module.gremmieCatalog = function(message) {
     message.channel.send("These are all of the available seals. To select a seal, you must have a received Gremmies count greater than or equal to the seals price. If this condition is met, you then type \"!SetSeal\" followed by the seal's ID. To find it's ID, count it's position in the catalog, starting from 0. To find the ID of a custom seal, look at it's catalog entry. It will contain it's ID. Please include the - when purchasing them, as it is required to tell the standard seals apart from the custom seals."); // Send some info about the catalog.
 
-    const embed = new Discord.RichEmbed() // Create a new RichEmbed.
+    const embed = new data.discord.RichEmbed() // Create a new RichEmbed.
     .setTitle("Today's GremmieSeal Catalog") // Set the embed's title.
-    .setAuthor(client.user.username, client.user.avatarURL) // Set it's author, and avatar.
+    .setAuthor(data.client.user.username, data.client.user.avatarURL) // Set it's author, and avatar.
     .setDescription("Our seals:") // Give it a description.
     .setColor(0x7f0026); // Set it's color to a nice crimson.
 
-    for (var i = 0; i < seals.length; i++) {
-      embed.addField(`Seal #${i}`, `${seals[i]}`); // Loop through each seal, and add it's value to the embed.
+    for (var i = 0; i < data.seals.length; i++) {
+      embed.addField(`Seal #${i}`, `${data.seals[i]}`); // Loop through each seal, and add it's value to the embed.
     }
 
     // Grab the server's custom seal page.
@@ -179,14 +212,14 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
 
 
     if (argInt >= 0) { // If a native seal is selected, continue.
-      if (parseInt(seals[argInt].split('|')[1], 10) <= row.gremmiesRecieved && argInt != undefined) { // Make sure the seal exists, and can be afforded.
-        message.reply("New Seal set - " + seals[argInt]); // Tell the user that the seal has been set.
+      if (parseInt(data.seals[argInt].split('|')[1], 10) <= row.gremmiesRecieved && argInt != undefined) { // Make sure the seal exists, and can be afforded.
+        message.reply("New Seal set - " + data.seals[argInt]); // Tell the user that the seal has been set.
 
         sql.run(`UPDATE scores SET selectedSeal = ${argInt} WHERE userId = ${message.author.id}`); // We lied to them. It hasn't yet been set. We do that here.
 
       } else {
-      if (parseInt(seals[argInt].split('|')[1], 10) > row.gremmiesRecieved) { // If the GremmieSeal is to expensive, give it to them anyways, and repossess the user's car.
-        message.reply(`Sorry but you haven't received enough GremmieSeals to purchase this seal. You need: ${seals[argInt].split('|')[1]} seals.`);
+      if (parseInt(data.seals[argInt].split('|')[1], 10) > row.gremmiesRecieved) { // If the GremmieSeal is to expensive, give it to them anyways, and repossess the user's car.
+        message.reply(`Sorry but you haven't received enough GremmieSeals to purchase this seal. You need: ${data.seals[argInt].split('|')[1]} seals.`);
       }
     }
     }
@@ -257,7 +290,7 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
           if (!row.selectedSeal) row.selectedSeal = 0; // If the user doesn't have a selected seal, set it to 0, the standard red seal.
 
         if (slotInt >= 0) { // If the seal is positive, meaning a default seal, this runs.
-        sealText = seals[slotInt]; // Grab the seal from the array.
+        sealText = data.seals[slotInt]; // Grab the seal from the array.
       } else {
         if (rowSeals) {
           let fetch = "ID OUT OF RANGE ERROR3"; // If the seal is custom seal, fetch the seal.
@@ -267,12 +300,12 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
 
           sealText = fetch;
         } else {
-          sealText = seals[0]; // If none of these attempts worked, just use the default seal.
+          sealText = data.seals[0]; // If none of these attempts worked, just use the default seal.
         }
 
       }
         if (sealText === undefined || sealText === null) // If something went wrong, use the default seal.
-          sealText = seals[0];
+          sealText = data.seals[0];
 
         message.channel.send(Response + " " + sealText.split('|')[0]); // Send the message!
 
@@ -301,7 +334,7 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
   },
 
   module.gremmieSays = function(message) {
-    if (message.guild.members.get(`${client.user.id}`).hasPermission(`MANAGE_MESSAGES`)) { // Checks the bot's permissions
+    if (message.guild.members.get(`${data.client.user.id}`).hasPermission(`MANAGE_MESSAGES`)) { // Checks the bot's permissions
   	  message.channel.send(message.content.slice("!GremmieSays".length)); // See what the user wants GSB to say - we slice off the command from the message.
 
   	  message.react("✔").then(); // Add the checkmark reaction, it looks cool.
@@ -324,6 +357,92 @@ module.exports = function(client, Discord, settings, seals, config, logAction) {
   		  message.reply(`Gremmies Sent: ${row.gremmiesGiven} -- Gremmies received: ${row.gremmiesRecieved} `); // Send the stats!
   		});
   	}
+  }
+
+  module.encodeMessage = function(message, args, command) {
+
+   message.channel.fetchMessages().then(messages => {
+   const authorSentMessages = messages.filter(msg => msg.author == message.author);
+   const msg = authorSentMessages.array()[1];
+
+   if (msg != null || msg != undefined) {
+     fromDict = `qwertyuiopasdfghjklzxcvbnm `;
+     toDict = `1234567890-/:;()$&@".,?!'[ `;
+
+     let decKey = Math.floor(Math.random() * Math.floor(toDict.length));
+     toDict = shiftString(toDict, decKey);
+
+     let output = "";
+
+     let textToTranslate = "";
+
+     args[0] = message.content.slice(command.length);
+
+     if (args[0].trim().length > 1) {
+       textToTranslate = args[0];
+       message.delete();
+     } else {
+       msg.delete();
+       textToTranslate = msg.content.toLowerCase();
+     }
+     for (var i = 0; i < textToTranslate.length; i++) {
+       let fromChar = textToTranslate.charAt(i);
+       let toChar = 'a';
+       if (fromDict.indexOf(fromChar) > 0) {
+       toChar = toDict.charAt(fromDict.indexOf(fromChar));
+       } else
+       continue;
+       output += toChar;
+     }
+
+     let sent = message.channel.send(`Your encrypted message: ${output} - Your decryption key: ${decKey}`).then(msg => {
+       message.author.send(`Your encrypted message: ${output} - Your decryption key: ${decKey}`);
+       msg.delete(5000)
+     })
+   } else {
+     return message.channel.send("Couldn't find a message to encode, please be sure that the message you wish to encode was within the last three messages.");
+   }
+   })
+
+
+  }
+
+  module.decodeMessage = function(message, args, command) {
+
+    message.channel.fetchMessages().then(messages => {
+    const authorSentMessages = messages.filter(msg => !msg.author.bot);
+		const msg = authorSentMessages.array()[1];
+
+		if (msg != null || msg != undefined) {
+			fromDict = `qwertyuiopasdfghjklzxcvbnm `;
+			toDict = `1234567890-/:;()$&@".,?!'[ `;
+
+			let decKey = args[0];
+			toDict = shiftString(toDict, decKey);
+
+			let output = "";
+			let textToTranslate = msg.content.toLowerCase();
+
+			for (var i = 0; i < textToTranslate.length; i++) {
+ 			  var fromChar = textToTranslate.charAt(i);
+			  var toChar = 'a';
+			  if (toDict.indexOf(fromChar) > 0) {
+				toChar = fromDict.charAt(toDict.indexOf(fromChar));
+			  } else {
+				continue;
+			  }
+			  output += toChar;
+			}
+
+			message.channel.send(`Your decrypted message: ${output}`);
+		} else {
+			return message.channel.send("Couldn't find a message to decode, please be sure that the message you wish to decode was within the last three messages.");
+		}
+	  })
+  }
+
+  function shiftString(toShift, shiftCount) {
+	   return toShift.slice(shiftCount, toShift.length) + toShift.slice(0, shiftCount);
   }
 
   return module;
