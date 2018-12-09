@@ -53,6 +53,7 @@ module.exports = function() {
     seals: undefined, // All of GSB's seals!
     logAction: undefined // The function to log data to GSB's log file. Only import this if you really need this.
   } 
+  module.data = data; // It's nice to share!
 
 
   module.loadData = function(client, discord, settings, modules, seals, logAction) { // This is what GSB calls to load in all of the data! Only put what you'd got in data.
