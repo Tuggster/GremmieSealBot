@@ -5,7 +5,7 @@ app.get('/data', function(req, res){
   res.send('Testing, 123!');
 });
 
-app.listen(80);
+app.listen(3000);
 
 module.exports = function() {
 
