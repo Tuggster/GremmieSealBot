@@ -3,8 +3,12 @@ var cors = require('cors')
 var app = express();
 
 app.get('/data', function(req, res, next) {
+<<<<<<< HEAD
   console.log("Incoming request!");
+=======
+>>>>>>> 70b3760387071bd2af8564c4ea4bd0eddda7fde1
   res.send('Testing, 123!');
+  res.
 });
 
 app.listen(3000);
