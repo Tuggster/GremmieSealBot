@@ -8,6 +8,8 @@ module.exports = function() { // Our main function - this gets run on bot startu
     discord: undefined
   }
 
+  module.data = data;
+
   module.loadData = function(client, discord) {
     data.client = client;
     data.discord = discord;

@@ -14,6 +14,8 @@ module.exports = function() {
     logAction: undefined
   }
 
+  module.data = data;
+
 
   module.loadData = function(client, discord, settings, modules, seals, logAction) {
     data.client = client;
@@ -112,13 +114,24 @@ module.exports = function() {
     .setColor(0x7f0026); // Set it's color to a nice crimson.
 
     embed.addField(`Ping`, `${new Date().getTime() - message.createdTimestamp} ms`); // Add the ping
+    embed.addField(`Uptime`, `${Math.trunc(data.client.uptime / 1000 / 60)} minutes, ${Math.trunc(data.client.uptime / 1000 / 60 / 60)} hours, or ${Math.trunc(data.client.uptime / 1000 / 60 / 60 / 24)} days. `)
     embed.addField(`Active Servers`, `${data.client.guilds.size} servers`); // Add the server count
     embed.addField(`Users`, `${data.client.users.size} users`); // Add the user count
     embed.addField(`Loaded Modules`, `${data.modules.length} modules`); // Add the user count
 
 
     for (var i = 0; i < data.modules.length; i++) {
-      embed.addField(`Module #${i}`, `Name: ${data.modules[i].name} -- Description: ${data.modules[i].desc}`);
+      if (typeof data.modules[i].data != undefined && typeof data.modules[i] != undefined && typeof data.modules[i].data == "object") {
+        var privilegesText = "\nPrivileges: \n";
+        var privileges = Object.keys(data.modules[i].data);
+
+        for (var j = 0; j < privileges.length; j++) {
+          privilegesText += privileges[j] + "\n";
+        }
+        embed.addField(`Module #${i}`, `Name: ${data.modules[i].name} -- Description: ${data.modules[i].desc}` + privilegesText);
+      } else {
+        embed.addField(`Module #${i}`, `Name: ${data.modules[i].name} -- Description: ${data.modules[i].desc}\nPrivileges not provided`);
+      }
     }
 
 
