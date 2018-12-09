@@ -401,6 +401,10 @@ module.exports = function() {
      for (var i = 0; i < textToTranslate.length; i++) {
        let fromChar = textToTranslate.charAt(i);
        let toChar = 'a';
+
+       if (fromChar == '’' || fromChar == "‘")
+        fromChar = `'`;
+
        if (fromDict.indexOf(fromChar) > 0) {
        toChar = toDict.charAt(fromDict.indexOf(fromChar));
        } else
@@ -439,6 +443,10 @@ module.exports = function() {
 			for (var i = 0; i < textToTranslate.length; i++) {
  			  var fromChar = textToTranslate.charAt(i);
 			  var toChar = 'a';
+        
+        if (fromChar == '’' || fromChar == "‘")
+         fromChar = `'`;
+
 			  if (toDict.indexOf(fromChar) > 0) {
 				toChar = fromDict.charAt(toDict.indexOf(fromChar));
 			  } else {

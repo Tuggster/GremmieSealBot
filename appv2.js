@@ -436,25 +436,47 @@ client.once('ready', () => {
     if (typeof mod.loadData !== "undefined") {
       let dataArgs = getParamNames(mod.loadData);
       for (var i = 0; i < dataArgs.length; i++) {
-        let arg = dataArgs[i];
+        let arg = dataArgs[i]; // Here is the list of supported data inputs for modules.
 
-        if (arg == "discord")
+        if (arg == "discord") // The main discord object
           argsOut.push(Discord);
 
-        if (arg == "client")
+        if (arg == "client") // The client object
           argsOut.push(client);
 
-        if (arg == "modules")
+        if (arg == "modules") // The modules list
           argsOut.push(gremmiePacks);
 
-        if (arg == "settings")
+        if (arg == "settings") // The server settings object
           argsOut.push(settings);
 
-        if (arg == "seals")
+        if (arg == "seals") // The list of GremmieSeals
           argsOut.push(seals);
 
-        if (arg == "logAction")
+        if (arg == "logAction") // The function to create a GremmieLog
           argsOut.push(logAction);
+
+        if (arg == "menMessages") // The list of messages GSB will send when mentioned
+          argsOut.push(menMessages);
+
+        if (arg == "sql") // The SQL object, used for saving scores.
+          argsOut.push(sql);
+
+        if (arg == "jokes") // The list of jokes
+          argsOut.push(jokes);
+
+        if (arg == "stream") // Stream - A youtube-audio-stream object, used for streaming youtube audio
+          argsOut.push(stream);
+
+        if (arg == "search") // Search - A youtube-search object used to search for youtube videos
+          argsOut.push(search);
+
+        if (arg == "fetchVideoInfo") // Fetch Video Info - a youtube-info object used to get youtube video info.
+          argsOut.push(fetchVideoInfo);
+
+        if (arg == "opus") // Opus - used for voice channel audio streaming.
+          argsOut.push(opus);
+
       }
 
       mod.loadData.apply(this, argsOut);
