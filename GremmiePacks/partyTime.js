@@ -3,14 +3,14 @@ module.exports = function() { // Our main function - this gets run on bot startu
 
   var module = {}; // Our module! Store functions and variables here.
 
-  var data = {
+  var data = { // Create an object to store our data. You can do this however you wish, but I like objects.
     client: undefined,
     discord: undefined
   }
 
-  module.data = data;
+  module.data = data; // Share the data.
 
-  module.loadData = function(client, discord) {
+  module.loadData = function(client, discord) { // Allow GSB to send us data.
     data.client = client;
     data.discord = discord;
   }
@@ -27,7 +27,7 @@ module.exports = function() { // Our main function - this gets run on bot startu
     }
   },
 
-  module.throwParty = function(message) { // The party function!
+  module.throwParty = function(message) { // The party function! Pretty much useless, it's one line, and is used once. Just here to show off functions.
     message.reply("hell yeah am party \n\n this message courtesy of the party time module."); // Reply with a party message.
   }
 
