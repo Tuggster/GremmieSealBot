@@ -2,16 +2,9 @@ const express = require(`express`);
 var cors = require('cors')
 var app = express();
 
-app.all('*', function(req, res, next){
-  if (!req.get('Origin')) return next();
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Methods', 'GET');
-  res.set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
-  if ('OPTIONS' == req.method) return res.send(200);
-  next();
-});
+app.use(cors());
 
-app.get('/data', function(req, res, next) {
+app.get('/data/', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
 
   res.send('Testing, 123!');
