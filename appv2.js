@@ -669,37 +669,37 @@ client.on('message', message => {
 
 
 
-  // if (command === "TopStats" && guildConf.beta == "true") {
-	// 		const embed = new Discord.RichEmbed().setTitle("Leaderboards")
-	// 			  .setAuthor(client.user.username, client.user.avatarURL)
-	// 			  .setDescription("Here are the stats for the top 3 users:")
-	// 			  .setColor(0x00AE86);
-  //
-  //
-	// 		for	(var i = 0; i < 3; i++) {
-	// 			sql.get(`SELECT DISTINCT userId, gremmiesRecieved, gremmiesGiven FROM scores ORDER BY gremmiesRecieved DESC LIMIT ${i - 1}, 1`).then(row => {
-	// 				console.log(`Name: ${client.users.get(row.userId).username} - ${row.gremmiesRecieved} Gremmies Received -- ${row.gremmiesGiven} Gremmies Sent.`)
-	// 				if (row.userId != undefined && row.gremmiesRecieved != undefined && row.gremmiesGiven != undefined) {
-	// 					if (client.users.get(row.userId) != null) {
-	// 						embed.addField(client.users.get(row.userId).username, `${row.gremmiesRecieved} Gremmies Received -- ${row.gremmiesGiven} Gremmies Sent.`);
-	// 						message.channel.send(`Name: ${client.users.get(row.userId).username} - ${row.gremmiesRecieved} Gremmies Received -- ${row.gremmiesGiven} Gremmies Sent.`);
-	// 					} else {
-	// 							return message.channel.send("Oh darn, something went wrong here!");
-  //
-	// 						sql.run(`DELETE FROM scores WHERE userId=${row.userId}`)
-	// 						embed.addField("FATAL ERROR", `Something went wrong (${row.gremmiesRecieved},${row.gremmiesGiven},${row.userId}  - This is debug information, pretend you didn't see it.)`);
-	// 					}
-	// 				} else {
-	// 					return message.channel.send("Oh darn, something went wrong here!");
-	// 				}
-  //
-	// 			})
-	// 		}
-	// 		//return message.channel.send({embed});
-  //
-  //
-  //
-	//   }
+  if (command === "TopStats" && guildConf.beta == "true") {
+			const embed = new Discord.RichEmbed().setTitle("Leaderboards")
+				  .setAuthor(client.user.username, client.user.avatarURL)
+				  .setDescription("Here are the stats for the top 3 users:")
+				  .setColor(0x00AE86);
+
+
+			for	(var i = 0; i < 3; i++) {
+				sql.get(`SELECT DISTINCT userId, gremmiesRecieved, gremmiesGiven FROM scores ORDER BY gremmiesRecieved DESC LIMIT ${i - 1}, 1`).then(row => {
+					console.log(`Name: ${client.users.get(row.userId).username} - ${row.gremmiesRecieved} Gremmies Received -- ${row.gremmiesGiven} Gremmies Sent.`)
+					if (row.userId != undefined && row.gremmiesRecieved != undefined && row.gremmiesGiven != undefined) {
+						if (client.users.get(row.userId) != null) {
+							embed.addField(client.users.get(row.userId).username, `${row.gremmiesRecieved} Gremmies Received -- ${row.gremmiesGiven} Gremmies Sent.`);
+							message.channel.send(`Name: ${client.users.get(row.userId).username} - ${row.gremmiesRecieved} Gremmies Received -- ${row.gremmiesGiven} Gremmies Sent.`);
+						} else {
+								return message.channel.send("Oh darn, something went wrong here!");
+
+							sql.run(`DELETE FROM scores WHERE userId=${row.userId}`)
+							embed.addField("FATAL ERROR", `Something went wrong (${row.gremmiesRecieved},${row.gremmiesGiven},${row.userId}  - This is debug information, pretend you didn't see it.)`);
+						}
+					} else {
+						return message.channel.send("Oh darn, something went wrong here!");
+					}
+
+				})
+			}
+			//return message.channel.send({embed});
+
+
+
+	  }
 
 
   if (command === "AddCustomSeal" && message.member.hasPermission(`ADMINISTRATOR`)) { // Does the user want to add a custom seal? Are they an admin?
