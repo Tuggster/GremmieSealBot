@@ -72,7 +72,7 @@ module.exports = function() {
 }
  
 ```
-Run appv2.js by opening cmd in your GSB directory, and running ```node app.js```.
+Run appv2.js by opening cmd in your GSB directory, and running ```node appv2.js```.
 You're looking for a message along the lines of ```Loaded module -- Module name: base -- Module description: Base GSB functionality```
 
 Assuming all goes well, you should now have a basic, functionless module that can be picked up by GSB!
