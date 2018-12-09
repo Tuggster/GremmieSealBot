@@ -11,6 +11,7 @@
   "dependencies": {
     "arraylist": "^0.1.0",
     "bufferutil": "^3.0.5",
+    "cors": "^2.8.5",
     "discord.js": "^11.3.2",
     "enmap": "^2.6.3",
     "enmap-sqlite": "^2.0.3",

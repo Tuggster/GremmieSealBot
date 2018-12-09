@@ -1,4 +1,5 @@
 const express = require(`express`);
+var cors = require('cors')
 var app = express();
 
 app.get('/data', function(req, res, next) {
