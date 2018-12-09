@@ -56,7 +56,7 @@ module.exports = function() {
   module.data = data; // It's nice to share!
 
 
-  module.loadData = function(client, discord, settings, modules, seals, logAction) { // This is what GSB calls to load in all of the data! Only put what you'd got in data.
+  module.loadData = function(client, discord, settings, modules, seals, logAction) { // This is what GSB calls to load in all of the data! Only put what you've got in data. The order doesn't matter, as long as you spell everything right.
     data.client = client;
     data.discord = discord;
     data.settings = settings;
