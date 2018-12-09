@@ -42,8 +42,27 @@ To write a custom module for GSB, create a javascript file in the GremmiePacks f
 ## Creating a main function: 
 You're going to want to begin your module with a main function - Repeat after me:
 ```
-module.exports = function(client, Discord, settings, seals, config, logAction) {
+module.exports = function() {
   var module = {};
+  
+  var data = { // This module contains everything you'd like to import from GSB. This example has every option in it, please, only use what you need.
+    client: undefined,
+    discord: undefined,
+    settings: undefined,
+    modules: undefined,
+    seals: undefined,
+    logAction: undefined
+  } 
+
+
+  module.loadData = function(client, discord, settings, modules, seals, logAction) { // This is what GSB calls to load in all of the data! Only put what you'd got in data.
+    data.client = client;
+    data.discord = discord;
+    data.settings = settings;
+    data.modules = modules;
+    data.seals = seals;
+    data.logAction = logAction;
+  }
   
   module.name = "name goes here";
   module.desc = "description goes here."
