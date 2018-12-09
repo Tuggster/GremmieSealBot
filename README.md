@@ -45,13 +45,13 @@ You're going to want to begin your module with a main function - Repeat after me
 module.exports = function() {
   var module = {};
   
-  var data = { // This module contains everything you'd like to import from GSB. This example has every option in it, please, only use what you need.
-    client: undefined,
-    discord: undefined,
-    settings: undefined,
-    modules: undefined,
-    seals: undefined,
-    logAction: undefined
+  var data = { // This variable contains everything you'd like to import from GSB. This example has every option in it, please, only use what you need.
+    client: undefined, // The discord client object.
+    discord: undefined, // The discord object
+    settings: undefined, // The settings object - enmap
+    modules: undefined, // The modules object - stores all of the modules!
+    seals: undefined, // All of GSB's seals!
+    logAction: undefined // The function to log data to GSB's log file. Only import this if you really need this.
   } 
 
 
@@ -75,6 +75,8 @@ Run appv2.js by opening cmd in your GSB directory, and running ```node app.js```
 You're looking for a message along the lines of ```Loaded module -- Module name: base -- Module description: Base GSB functionality```
 
 Assuming all goes well, you should now have a basic, functionless module that can be picked up by GSB!
+
+You don't need that data variable, that's just how I choose to store my module data.
 
 
 ## Adding functionality
