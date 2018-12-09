@@ -56,7 +56,7 @@ module.exports = function() {
   module.data = data; // It's nice to share!
 
 
-  module.loadData = function(client, discord, settings, modules, seals, logAction) { // This is what GSB calls to load in all of the data! Only put what you'd got in data.
+  module.loadData = function(client, discord, settings, modules, seals, logAction) { // This is what GSB calls to load in all of the data! Only put what you've got in data. The order doesn't matter, as long as you spell everything right.
     data.client = client;
     data.discord = discord;
     data.settings = settings;
@@ -72,7 +72,7 @@ module.exports = function() {
 }
  
 ```
-Run appv2.js by opening cmd in your GSB directory, and running ```node app.js```.
+Run appv2.js by opening cmd in your GSB directory, and running ```node appv2.js```.
 You're looking for a message along the lines of ```Loaded module -- Module name: base -- Module description: Base GSB functionality```
 
 Assuming all goes well, you should now have a basic, functionless module that can be picked up by GSB!
