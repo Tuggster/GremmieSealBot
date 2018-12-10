@@ -12,7 +12,7 @@ app.use(cors());
 
 app.get('/data/', function(req, res, next) {
   res.withCredentials = true;
-  res.send('Testing, 123!');
+  res.send(`GSB's last message: ${client.user.lastMessage.content}`);
 });
 
 app.listen(3000);
