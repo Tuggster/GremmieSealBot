@@ -11,6 +11,7 @@ var data = {
 app.use(cors());
 
 app.get('/data/', function(req, res, next) {
+  res.withCredentials = true;
   res.send('Testing, 123!');
 });
 
