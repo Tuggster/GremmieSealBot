@@ -2,11 +2,15 @@ const express = require(`express`);
 var cors = require('cors')
 var app = express();
 
+var data = {
+  client: undefined,
+  discord: undefined,
+  sql: undefined
+}
+
 app.use(cors());
 
 app.get('/data/', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-
   res.send('Testing, 123!');
 });
 
@@ -15,14 +19,6 @@ app.listen(3000);
 module.exports = function() {
 
   var module = {};
-
-  var data = {
-    client: undefined,
-    discord: undefined,
-    sql: undefined
-  }
-
-
 
   module.data = data;
 
