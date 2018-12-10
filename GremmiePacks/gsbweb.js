@@ -14,14 +14,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/data/', function(req, res, next) {
-  var userID = req.body.user;
+  if (typeof req.query.id != undefined) {
+	  var userID = req.query.id;
+	  
 
-  res.withCredentials = true;
-  res.setHeader('Content-Type', 'application/json');
+	  res.withCredentials = true;
+	  res.setHeader('Content-Type', 'application/json');
+		data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
+		  res.send(JSON.stringify({ name:  row.userId, sent: row.gremmiesGiven, received: row.gremmiesRecieved}));
+		}).catch(error => {
+		  console.log("Error thrown in stats fetch - GremmieWeb");
+		  res.send("Please send a valid Discord user ID.\nMake sure that the user actually has GremmieStats filed, too.")
+		  return;
+		});
+  }
 
-  data.sql.get(`SELECT * FROM scores WHERE userId ="${userId}"`).then(row => { // Grab the sender's GremmieStats profile.
-    res.send(JSON.stringify({ name:  row.userId, sent: row.gremmiesGiven, received: row.gremmiesRecieved}));
-  });
+  
 });
 
 // app.post('/data/',function(req,res,next) {
