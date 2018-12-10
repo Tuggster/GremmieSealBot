@@ -11,7 +11,7 @@ app.all('*', function(req, res, next){
   next();
 });
 
-app.get('/data', function(req, res, next) {
+app.get('/data/', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
 
   res.send('Testing, 123!');
