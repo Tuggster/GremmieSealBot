@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "arraylist": "^0.1.0",
+    "body-parser": "^1.18.3",
     "bufferutil": "^3.0.5",
     "cors": "^2.8.5",
     "discord.js": "^11.3.2",

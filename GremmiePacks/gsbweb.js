@@ -1,5 +1,6 @@
 const express = require(`express`);
-var cors = require('cors')
+const cors = require('cors')
+const bodyParser = require("body-parser");
 var app = express();
 
 var data = {
@@ -9,14 +10,24 @@ var data = {
 }
 
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get('/data/', function(req, res, next) {
-  res.withCredentials = true;
-  res.setHeader('Content-Type', 'application/json');
+// app.get('/data/', function(req, res, next) {
+//   res.withCredentials = true;
+//   res.setHeader('Content-Type', 'application/json');
+//
+//   data.sql.get(`SELECT * FROM scores WHERE userId ="291754013131538432"`).then(row => { // Grab the sender's GremmieStats profile.
+//     res.send(JSON.stringify({ name:  row.userId, sent: row.gremmiesGiven, received: row.gremmiesRecieved}));
+//   });
+// });
 
-  data.sql.get(`SELECT * FROM scores WHERE userId ="291754013131538432"`).then(row => { // Grab the sender's GremmieStats profile.
-    res.send(JSON.stringify({ name:  row.userId, sent: row.gremmiesGiven, received: row.gremmiesRecieved}));
-  });
+app.post('/data/',function(req,res,next) {
+    var userID = req.body.user;
+
+    data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
+      res.send(JSON.stringify({ name: row.userId, sent: row.gremmiesGiven, received: row.gremmiesRecieved}));
+    });
 });
 
 app.listen(3000);
