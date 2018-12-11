@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.get('/data/', function(req, res, next) {
   if (typeof req.query.id != undefined) {
 	  var userID = req.query.id;
-	  
+
 
 	  res.withCredentials = true;
 	  res.setHeader('Content-Type', 'application/json');
@@ -29,7 +29,7 @@ app.get('/data/', function(req, res, next) {
 		});
   }
 
-  
+
 });
 
 // app.post('/data/',function(req,res,next) {
