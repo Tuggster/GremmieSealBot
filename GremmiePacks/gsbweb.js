@@ -21,30 +21,29 @@ app.get('/data/', function(req, res, next) {
       names: [],
       sent: [],
       receieved: []
-    }
+    };
 
-	  res.withCredentials = true;
+	  //res.withCredentials = true;
 	  res.setHeader('Content-Type', 'application/json');
 
 
-	  var rowsCount = data.sql.get("COUNT (*) FROM scores");
 
 
     data.sql.all(`SELECT * FROM scores`).then(rows => { // Grab the sender's GremmieStats profile.
       for (var j = 0; j < rows.length; j++) {
-        response.names[i] = member.username;
-        response.sent[i] = row[j].gremmiesGiven;
-        response.receieved[i] = row[j].gremmiesRecieved;
+        response.names.push(3);
+        response.sent.push(rows[j].gremmiesGiven);
+        response.receieved.push(rows[j].gremmiesRecieved);
+		console.log(`${response.sent}`);
       }
 
-		}).catch(error => {
-		  console.log("Error thrown in stats fetch - GremmieWeb" + error);
-		  res.send("Please send a valid Discord user ID.\nMake sure that the user actually has GremmieStats filed, too.")
-		  return;
-		});
+	}).catch(error => {
+	  console.log("Error thrown in stats fetch - GremmieWeb" + error);
+	  return;
+	});
 
 
-    res.send(JSON.stringify(response/*{ name: data.client.users.get(row.userId).username, sent: row.gremmiesGiven, received: row.gremmiesRecieved}*/));
+    res.send(JSON.stringify(response));
 
   }
 
