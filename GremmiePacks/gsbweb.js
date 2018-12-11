@@ -13,37 +13,60 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+var names = [];
+var sent = [];
+var receieved = [];
 
+function addData(name, sentCount, receievedCount) {
+	names.push(name);
+	sent.push(sentCount);
+	receieved.push(receievedCount);
+	console.log(`I just pushed: ${name}, ${sentCount}, and ${receievedCount}`)
+}
+
+function clearData() {
+	names = [];
+	sent = [];
+	receieved = [];
+}
 
 app.get('/data/', function(req, res, next) {
   if (typeof req.query.id != undefined) {
-    var response = {
-      names: [],
-      sent: [],
-      receieved: []
-    };
+
+	var response = {
+		names: [],
+		sent: [],
+		receieved: []
+	}
 
 	  //res.withCredentials = true;
 	  res.setHeader('Content-Type', 'application/json');
 
-
+	clearData();
 
 
     data.sql.all(`SELECT * FROM scores`).then(rows => { // Grab the sender's GremmieStats profile.
       for (var j = 0; j < rows.length; j++) {
-        response.names.push(3);
-        response.sent.push(rows[j].gremmiesGiven);
-        response.receieved.push(rows[j].gremmiesRecieved);
-		console.log(`${response.sent}`);
+		if (data.client.users.get(rows[j].userId.toString()) != undefined)
+			response.names.push(data.client.users.get(rows[j].userId.toString()).username);
+		else 
+			response.names.push("Deleted account");
+		
+		response.sent.push(rows[j].gremmiesGiven);
+		response.receieved.push(rows[j].gremmiesRecieved);
       }
 
+	}).then(function() {
+		res.send(JSON.stringify(response), null, 3);
 	}).catch(error => {
 	  console.log("Error thrown in stats fetch - GremmieWeb" + error);
 	  return;
 	});
+	
 
-
-    res.send(JSON.stringify(response));
+	
+	
+	
 
   }
 
