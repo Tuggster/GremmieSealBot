@@ -1,6 +1,6 @@
 const express = require(`express`);
-const cors = require('cors')
-const bodyParser = require("body-parser");
+const cors = require(`cors`)
+const bodyParser = require(`body-parser`);
 var app = express();
 
 var data = {
@@ -13,6 +13,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
+
 app.get('/data/', function(req, res, next) {
   if (typeof req.query.id != undefined) {
 	  var userID = req.query.id;
@@ -21,7 +23,7 @@ app.get('/data/', function(req, res, next) {
 	  res.withCredentials = true;
 	  res.setHeader('Content-Type', 'application/json');
 		data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
-		  res.send(JSON.stringify({ name:  row.userId, sent: row.gremmiesGiven, received: row.gremmiesRecieved}));
+		  res.send(JSON.stringify({ name: data.client.users.get(row.userId).username, sent: row.gremmiesGiven, received: row.gremmiesRecieved}));
 		}).catch(error => {
 		  console.log("Error thrown in stats fetch - GremmieWeb");
 		  res.send("Please send a valid Discord user ID.\nMake sure that the user actually has GremmieStats filed, too.")
