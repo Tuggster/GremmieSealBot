@@ -33,8 +33,8 @@ app.get('/data/', function(req, res, next) {
     data.sql.all(`SELECT * FROM scores`).then(rows => { // Grab the sender's GremmieStats profile.
       for (var j = 0; j < rows.length; j++) {
         response.names[i] = member.username;
-        response.sent[i] = row[j].gremmiesGiven;
-        response.receieved[i] = row[j].gremmiesRecieved;
+        response.sent[i] = rows[j].gremmiesGiven;
+        response.receieved[i] = rows[j].gremmiesRecieved;
       }
 
 		}).catch(error => {
@@ -44,7 +44,7 @@ app.get('/data/', function(req, res, next) {
 		});
 
 
-    res.send(JSON.stringify(response/*{ name: data.client.users.get(row.userId).username, sent: row.gremmiesGiven, received: row.gremmiesRecieved}*/));
+    res.send(JSON.stringify(response));
 
   }
 
