@@ -17,18 +17,30 @@ app.use(bodyParser.json());
 
 app.get('/data/', function(req, res, next) {
   if (typeof req.query.id != undefined) {
-	  var userID = req.query.id;
-
+    var response = {
+      names: [],
+      sent: [],
+      receieved: []
+    }
 
 	  res.withCredentials = true;
 	  res.setHeader('Content-Type', 'application/json');
-		data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
-		  res.send(JSON.stringify({ name: data.client.users.get(row.userId).username, sent: row.gremmiesGiven, received: row.gremmiesRecieved}));
-		}).catch(error => {
-		  console.log("Error thrown in stats fetch - GremmieWeb");
-		  res.send("Please send a valid Discord user ID.\nMake sure that the user actually has GremmieStats filed, too.")
-		  return;
-		});
+    for (var i = 0; i < data.client.users.array().length) {
+      user = data.client.users.array()[i];
+  		data.sql.get(`SELECT * FROM scores WHERE userId ="${user.id}"`).then(row => { // Grab the sender's GremmieStats profile.
+
+
+        response.names[i] = data.client.users.get(row.userId).username;
+        response.sent[i] = row.gremmiesGiven;
+        response.receieved[i] = row.gremmiesRecieved;
+
+  		  res.send(JSON.stringify(response/*{ name: data.client.users.get(row.userId).username, sent: row.gremmiesGiven, received: row.gremmiesRecieved}*/));
+  		}).catch(error => {
+  		  console.log("Error thrown in stats fetch - GremmieWeb");
+  		  res.send("Please send a valid Discord user ID.\nMake sure that the user actually has GremmieStats filed, too.")
+  		  return;
+  		});
+  }
   }
 
 
