@@ -25,22 +25,25 @@ app.get('/data/', function(req, res, next) {
 
 	  res.withCredentials = true;
 	  res.setHeader('Content-Type', 'application/json');
-    for (var i = 0; i < data.client.users.array().length) {
-      user = data.client.users.array()[i];
-  		data.sql.get(`SELECT * FROM scores WHERE userId ="${user.id}"`).then(row => { // Grab the sender's GremmieStats profile.
+	  
+	  var memArray = data.client.users.array();
+		for (var i = 0; i < memArray.length; i++) {
+				var member = memArray[i];
+data.sql.get(`SELECT * FROM scores WHERE userId ="${member.id}"`).then(row => { // Grab the sender's GremmieStats profile.
 
-
-        response.names[i] = data.client.users.get(row.userId).username;
+        response.names[i] = member.username;
         response.sent[i] = row.gremmiesGiven;
         response.receieved[i] = row.gremmiesRecieved;
 
-  		  res.send(JSON.stringify(response/*{ name: data.client.users.get(row.userId).username, sent: row.gremmiesGiven, received: row.gremmiesRecieved}*/));
   		}).catch(error => {
-  		  console.log("Error thrown in stats fetch - GremmieWeb");
+  		  console.log("Error thrown in stats fetch - GremmieWeb" + error);
   		  res.send("Please send a valid Discord user ID.\nMake sure that the user actually has GremmieStats filed, too.")
   		  return;
   		});
+	
   }
+    res.send(JSON.stringify(response/*{ name: data.client.users.get(row.userId).username, sent: row.gremmiesGiven, received: row.gremmiesRecieved}*/));
+
   }
 
 
