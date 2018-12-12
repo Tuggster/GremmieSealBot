@@ -32,10 +32,9 @@ app.get('/data/', function(req, res, next) {
 			response.names.push(data.client.users.get(rows[j].userId.toString()).username);
 		else
 			response.names.push("Deleted account");
-
-		response.sent.push(rows[j].gremmiesGiven);
-		response.receieved.push(rows[j].gremmiesRecieved);
-      }
+  		response.sent.push(rows[j].gremmiesGiven);
+  		response.receieved.push(rows[j].gremmiesRecieved);
+    }
 
 	}).then(function() {
 		res.send(JSON.stringify(response), null, 3);
@@ -103,13 +102,15 @@ app.post('/data/',function(req,res,next) {
       var userID = req.query.user;
 
       data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
-        if (row.sealsRecieved >= data.seals[req.query.seal].split(`|`)[1]) {
-			sql.run(`UPDATE scores SET selectedSeal = ${req.query.seal} WHERE userId = ${userID}`); // We lied to them. It hasn't yet been set. We do that here.
-		} else {
-			res.send("not enough bucks!");
-		}
-	  }).then(function() {
-        res.send("success!");
+        if (row.sealsRecieved >= data.seals[parseInt(req.query.seal, 10)].split(`|`)[1]) {
+    			sql.run(`UPDATE scores SET selectedSeal = ${req.query.seal} WHERE userId = ${userID}`); // We lied to them. It hasn't yet been set. We do that here.
+    		} else {
+    			res.send("not enough bucks!");
+          return;
+    		}
+  	  }).then(function() {
+          res.send("success!");
+          return;
       });
     }
 });
