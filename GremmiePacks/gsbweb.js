@@ -77,6 +77,19 @@ app.get('/data/', function(req, res, next) {
 	  response.serverCount = data.client.guilds.array().length;
 
 	  res.send(response);
+  } else if (req.query.req == "overview") {
+    var response = {
+      ping: undefined,
+      name: "error!",
+      sent: 0,
+      receieved: 0
+    }
+    data.sql.get(`SELECT * FROM scores WHERE userId="${req.query.user}"`).then(row => {
+      response.ping = data.client.ping;
+      response.name = data.client.users.get(req.query.user.toString()).username;
+      response.sent = row.gremmiesGiven;
+      response.received = row.gremmiesRecieved;
+    });
   }
 
 
