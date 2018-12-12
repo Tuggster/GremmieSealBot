@@ -443,7 +443,7 @@ module.exports = function() {
 			for (var i = 0; i < textToTranslate.length; i++) {
  			  var fromChar = textToTranslate.charAt(i);
 			  var toChar = 'a';
-        
+
         if (fromChar == '’' || fromChar == "‘")
          fromChar = `'`;
 
