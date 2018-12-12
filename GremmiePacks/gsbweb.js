@@ -94,20 +94,24 @@ app.get('/data/', function(req, res, next) {
     response.seals.push(sealSplit[0]);
     response.prices.push(sealSplit[1]);
   }
-  
+
   res.send(response);
 }
 
 
 });
 
-// app.post('/data/',function(req,res,next) {
-//     var userID = req.body.user;
-//
-//     data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
-//       res.send(JSON.stringify({ name: row.userId, sent: row.gremmiesGiven, received: row.gremmiesRecieved}));
-//     });
-// });
+app.post('/data/',function(req,res,next) {
+    if (req.query.req == "setseal") {
+      var userID = req.query.user;
+
+      data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
+        sql.run(`UPDATE scores SET selectedSeal = ${req.query.seal} WHERE userId = ${userID}`); // We lied to them. It hasn't yet been set. We do that here.
+      }).then(function() {
+        res.send("success!");
+      });
+    }
+});
 
 app.listen(3000);
 
