@@ -31,7 +31,7 @@ function clearData() {
 }
 
 app.get('/data/', function(req, res, next) {
-  if (typeof req.query.id != undefined) {
+  if (req.query.req == "stats") {
 
 	var response = {
 		names: [],
@@ -63,11 +63,20 @@ app.get('/data/', function(req, res, next) {
 	  return;
 	});
 
+  } else if (req.query.req == "info") {
+	  var response = {
+		  ping: 300,
+		  userCount: 70,
+		  serverCount: 8
+	  }
 
+	  res.setHeader('Content-Type', 'application/json');
 
+	  response.ping = data.client.ping;
+	  response.userCount = data.client.users.array().length;
+	  response.serverCount = data.client.guilds.array().length;
 
-
-
+	  res.send(response);
   }
 
 
