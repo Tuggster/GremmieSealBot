@@ -49,9 +49,9 @@ app.get('/data/', function(req, res, next) {
       for (var j = 0; j < rows.length; j++) {
 		if (data.client.users.get(rows[j].userId.toString()) != undefined)
 			response.names.push(data.client.users.get(rows[j].userId.toString()).username);
-		else 
+		else
 			response.names.push("Deleted account");
-		
+
 		response.sent.push(rows[j].gremmiesGiven);
 		response.receieved.push(rows[j].gremmiesRecieved);
       }
@@ -62,11 +62,11 @@ app.get('/data/', function(req, res, next) {
 	  console.log("Error thrown in stats fetch - GremmieWeb" + error);
 	  return;
 	});
-	
 
-	
-	
-	
+
+
+
+
 
   }
 
