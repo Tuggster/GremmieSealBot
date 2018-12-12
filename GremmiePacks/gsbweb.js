@@ -6,29 +6,13 @@ var app = express();
 var data = {
   client: undefined,
   discord: undefined,
-  sql: undefined
+  sql: undefined,
+  seals: undefined
 }
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-var names = [];
-var sent = [];
-var receieved = [];
-
-function addData(name, sentCount, receievedCount) {
-	names.push(name);
-	sent.push(sentCount);
-	receieved.push(receievedCount);
-	console.log(`I just pushed: ${name}, ${sentCount}, and ${receievedCount}`)
-}
-
-function clearData() {
-	names = [];
-	sent = [];
-	receieved = [];
-}
 
 app.get('/data/', function(req, res, next) {
   if (req.query.req == "stats") {
@@ -84,7 +68,7 @@ app.get('/data/', function(req, res, next) {
       sent: 0,
       receieved: 0
     };
-	
+
     data.sql.get(`SELECT * FROM scores WHERE userId="${req.query.user}"`).then(row => {
 	  response.ping = data.client.ping;
 
@@ -96,7 +80,24 @@ app.get('/data/', function(req, res, next) {
     }).then(function() {
 	  res.send(JSON.stringify(response));
 	});
+} else if (req.query.req == "seals") {
+  var response = {
+    seals: [],
+    prices: []
+  };
+
+  var sealsImages = [];
+  var sealsPrices = [];
+
+  for (var i = 0; i < data.seals.length; i++) {
+    var sealSplit = data.seals[i].split(`|`);
+    sealsImages.push(sealSplit[0]);
+    sealsPrices.push(sealSplit[1]);
   }
+
+  response.seals.push(sealsImages);
+  response.prices.push(sealsPrices);
+}
 
 
 });
@@ -117,10 +118,11 @@ module.exports = function() {
 
   module.data = data;
 
-  module.loadData = function(sql, client, discord) {
+  module.loadData = function(sql, client, discord, seals) {
     data.sql = sql;
     data.client = client;
     data.discord = discord;
+    data.seals = seals;
   }
 
   module.name = "GremmieWeb";
