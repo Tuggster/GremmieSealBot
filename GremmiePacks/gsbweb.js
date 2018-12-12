@@ -106,8 +106,12 @@ app.post('/data/',function(req,res,next) {
       var userID = req.query.user;
 
       data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
-        sql.run(`UPDATE scores SET selectedSeal = ${req.query.seal} WHERE userId = ${userID}`); // We lied to them. It hasn't yet been set. We do that here.
-      }).then(function() {
+        if (row.sealsRecieved >= data.seals[req.query.seal].split(`|`)[1]) {
+			sql.run(`UPDATE scores SET selectedSeal = ${req.query.seal} WHERE userId = ${userID}`); // We lied to them. It hasn't yet been set. We do that here.
+		} else {
+			res.send("not enough bucks!");
+		}
+	  }).then(function() {
         res.send("success!");
       });
     }
