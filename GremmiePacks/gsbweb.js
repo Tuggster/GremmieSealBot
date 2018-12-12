@@ -76,20 +76,26 @@ app.get('/data/', function(req, res, next) {
 	  response.userCount = data.client.users.array().length;
 	  response.serverCount = data.client.guilds.array().length;
 
-	  res.send(response);
+	  res.send(JSON.stringify(response));
   } else if (req.query.req == "overview") {
     var response = {
-      ping: undefined,
+      ping: 0,
       name: "error!",
       sent: 0,
       receieved: 0
-    }
+    };
+	
     data.sql.get(`SELECT * FROM scores WHERE userId="${req.query.user}"`).then(row => {
-      response.ping = data.client.ping;
-      response.name = data.client.users.get(req.query.user.toString()).username;
-      response.sent = row.gremmiesGiven;
-      response.received = row.gremmiesRecieved;
-    });
+	  response.ping = data.client.ping;
+
+	  if (typeof row !== "undefined") {
+		  response.name = data.client.users.get(req.query.user.toString()).username;
+		  response.sent = row.gremmiesGiven;
+		  response.received = row.gremmiesRecieved;
+	  }
+    }).then(function() {
+	  res.send(JSON.stringify(response));
+	});
   }
 
 
