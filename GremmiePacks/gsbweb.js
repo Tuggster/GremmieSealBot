@@ -26,9 +26,6 @@ app.get('/data/', function(req, res, next) {
 	  //res.withCredentials = true;
     res.setHeader('Content-Type', 'application/json');
 
-	clearData();
-
-
     data.sql.all(`SELECT * FROM scores`).then(rows => { // Grab the sender's GremmieStats profile.
       for (var j = 0; j < rows.length; j++) {
 		if (data.client.users.get(rows[j].userId.toString()) != undefined)
