@@ -40,7 +40,7 @@ app.get('/data/', function(req, res, next) {
 	}
 
 	  //res.withCredentials = true;
-	  res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'application/json');
 
 	clearData();
 
