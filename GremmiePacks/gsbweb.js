@@ -91,12 +91,11 @@ app.get('/data/', function(req, res, next) {
 
   for (var i = 0; i < data.seals.length; i++) {
     var sealSplit = data.seals[i].split(`|`);
-    sealsImages.push(sealSplit[0]);
-    sealsPrices.push(sealSplit[1]);
+    response.seals.push(sealSplit[0]);
+    response.prices.push(sealSplit[1]);
   }
-
-  response.seals.push(sealsImages);
-  response.prices.push(sealsPrices);
+  
+  res.send(response);
 }
 
 
