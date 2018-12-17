@@ -58,7 +58,7 @@ app.get('/data/', function(req, res, next) {
 
 	  res.send(JSON.stringify(response));
   } else if (req.query.req == "overview") {
-	  
+
 	if (req.query.code != undefined && typeof req.query.code != "undefined" && req.query.code != '' && req.query.code != `undefined`) {
 		if (req.query.user != undefined || req.query.user != "") {
 			try {
@@ -71,7 +71,7 @@ app.get('/data/', function(req, res, next) {
 			return res.send("Invalid user!");
 		}
 	}
-	  
+
     var response = {
       ping: 0,
       name: "error!",
@@ -90,7 +90,7 @@ app.get('/data/', function(req, res, next) {
     }).then(function() {
 	  res.send(JSON.stringify(response));
 	});
-	
+
 	} else if (req.query.req == "seals") {
 	  var response = {
 		seals: [],
@@ -112,7 +112,7 @@ app.get('/data/', function(req, res, next) {
 			try {
 				if (req.query.code != "" && req.query.code != undefined)
 					data.client.users.get(req.query.user.toString().trim()).send(`Someone is trying to sign in as you on GremmieWeb!\nIf you aren't trying to sign in, don't worry, and don't do anything.\nYour login code: ${req.query.code}`);
-				
+
 				res.send(data.client.users.get(req.query.user.toString()).username);
 			} catch (e) {
 				res.send(`Couldn't get username.`);
@@ -126,27 +126,27 @@ app.get('/data/', function(req, res, next) {
 app.post('/data/',function(req,res,next) {
     if (req.query.req == "setseal") {
       var userID = req.query.user;
-	  
-	  if (isNaN(userID) || userID == "" || userID == undefined) {
-	    res.send("\n\nIt looks like you've either opted out of giving us your ID, or it's invalid. You won't be able to set seals.\n\nIf you did set your ID, try clearing cookies and setting it again.")
-		return
-	  }
-		  
-	  try {
-		  data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
-			if (row.gremmiesRecieved >= data.seals[parseInt(req.query.seal, 10)].split(`|`)[1]) {
-					data.sql.run(`UPDATE scores SET selectedSeal = ${req.query.seal} WHERE userId = ${userID}`); // We lied to them. It hasn't yet been set. We do that here.
-				} else {
-					res.send("not enough bucks!");
-					return;
-				}
-		  }).then(function() {
-			  res.send("success!");
-			  return;
-		  });
-	  } catch (e) {
-		  res.send(e);
-	  }
+
+  	  if (isNaN(userID) || userID == "" || userID == undefined) {
+  	    res.send("\n\nIt looks like you've either opted out of giving us your ID, or it's invalid. You won't be able to set seals.\n\nIf you did set your ID, try clearing cookies and setting it again.")
+  		return
+  	  }
+
+  	  try {
+  		  data.sql.get(`SELECT * FROM scores WHERE userId ="${userID}"`).then(row => { // Grab the sender's GremmieStats profile.
+  			if (row.gremmiesRecieved >= data.seals[parseInt(req.query.seal, 10)].split(`|`)[1]) {
+  					data.sql.run(`UPDATE scores SET selectedSeal = ${req.query.seal} WHERE userId = ${userID}`); // We lied to them. It hasn't yet been set. We do that here.
+  				} else {
+  					res.send("not enough bucks!");
+  					return;
+  				}
+  		  }).then(function() {
+  			  res.send("success!");
+  			  return;
+  		  });
+  	  } catch (e) {
+  		  res.send(e);
+  	  }
     }
 });
 
