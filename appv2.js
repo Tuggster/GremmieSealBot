@@ -91,6 +91,7 @@ function playSong(message) { // Play a song!
 				connection.disconnect();
 			}
 		});
+		return;
 	})
 }
 
@@ -110,7 +111,8 @@ function searchfunc(message) { // Search youtube for a video!
 
 
       if(err) return console.log(err); // If any errors are thrown, log them.
-      server.queue.push(results[0].link); // Add the song to the queue.
+      server.queue.push(`${results[0].link}`); // Add the song to the queue.
+	  message.reply(`Here's the link, buddy: ${results[0].link}`);
 	  console.log(`Song queued: ${name}`);
 
     })
@@ -164,7 +166,7 @@ function getRandomIntInclusive(min, max) { // This code wasn't written by me. I 
 }
 
 // The list of GremmieSeals! Formatting is as follows - "SEAL LINK | SEAL PRICE | DESCRIPTION" - Normally, the description shows the price, and seal's ID. A seal's ID is it's position in the array, starting from zero.
-var seals = ["https://i.imgur.com/LkP71Kr.png |0| Price: 0 - ID: 0", "https://i.imgur.com/nK3Wee5.png |25| Price: 25 - ID: 1", "https://i.imgur.com/35KMlDe.png |35| Price: 35 - ID: 2", "https://i.imgur.com/WKomEDw.png |35| Price: 35 - ID: 3", "https://i.imgur.com/WfSzveW.png | 420 | Price: 420 - ID: 4 | 2018 April 1st joke -- It costs 420, LOL XD"]
+var seals = ["https://i.imgur.com/LkP71Kr.png |1| Price: 1 - ID: 0", "https://i.imgur.com/nK3Wee5.png |25| Price: 25 - ID: 1", "https://i.imgur.com/35KMlDe.png |35| Price: 35 - ID: 2", "https://i.imgur.com/WKomEDw.png |35| Price: 35 - ID: 3", "https://i.imgur.com/WfSzveW.png | 420 | Price: 420 - ID: 4 | 2018 April 1st joke -- It costs 420, LOL XD"]
 
 // A library of jokes for GSB to tell!
 var jokes = ["What did the Gremlin say to the rock? Eat me!",
@@ -455,6 +457,9 @@ client.once('ready', () => {
 
         if (arg == "logAction") // The function to create a GremmieLog
           argsOut.push(logAction);
+		  
+	    if (arg == "config")
+			argsOut.push(config);
 
         if (arg == "menMessages") // The list of messages GSB will send when mentioned
           argsOut.push(menMessages);
@@ -658,12 +663,13 @@ client.on('message', message => {
 
   		if(args.indexOf("https") > -1 || args.indexOf("http") > -1) { // Check if the message starts with a link.
   		  message.reply("Adding URL "+args); // Respond with some nice feedback.
-  		  server.queue.push(args); // Add the url to the queue.
+  		  server.queue.push(`${args.trim()}`); // Add the url to the queue.
   		} else{ // If the arguments wern't a url, do somethin' else!
   		  message.reply("Adding "+(message.content.slice("!GremmiePlay".length))); // Respond with a message about adding the video.
   		  searchfunc(message); // Search for the video.
   		}
   		  playSong(message); // Play the song!
+		  return;
 
   	  } else { // if they don't have permission, tell them.
   		  if (message.content.startsWith("!GremmiePlay") && !message.member.roles.find("name", "Gremmie DJ")) {

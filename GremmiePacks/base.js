@@ -8,6 +8,7 @@ module.exports = function() {
   var data = {
     client: undefined,
     discord: undefined,
+	config: undefined,
     settings: undefined,
     modules: undefined,
     seals: undefined,
@@ -17,9 +18,10 @@ module.exports = function() {
   module.data = data;
 
 
-  module.loadData = function(client, discord, settings, modules, seals, logAction) {
+  module.loadData = function(client, discord, config, settings, modules, seals, logAction) {
     data.client = client;
     data.discord = discord;
+	data.config = config;
     data.settings = settings;
     data.modules = modules;
     data.seals = seals;
@@ -31,6 +33,12 @@ module.exports = function() {
 
   module.name = "base";
   module.desc = "Base GSB functionality";
+  
+  process.on('unhandledRejection', (reason, p) => {
+    console.log(`You done messed up.
+	${reason.stack}`);
+    // application specific logging, throwing an error, or other logic here
+  });
 
 
   module.initSQL = function() {
@@ -74,18 +82,18 @@ module.exports = function() {
     } else {
       if ((message.content.startsWith("!GremmieSeal") && !message.member.roles.find("name", "Gremmie Approved"))) { // If the user isn's Gremmie Approved, throw a big fit.
         message.reply("Sorry, but it looks like you aren't Gremmie Approved.");
-        logAction("Unauthorized user attempted to dispense seal - User: " + message.author.username);
+        //logAction("Unauthorized user attempted to dispense seal - User: " + message.author.username);
         console.log("Unauthorized user attempted to dispense seal - User: " + message.author.username);
       }
     }
 
-    if (command === "GiveSeals" && contains(config.turbolish, message.author.id)) { // Lets users mass send seals.
+    if (command === "GiveSeals" && contains(data.config.turbolish, message.author.id)) { // Lets users mass send seals.
       module.giveSeals(message);
     }
 
-    if (command === "GremmieSays" && contains(config.turbolish, message.author.id) && config.fun === "true") { // Lets turbolish users impersonate GSB.
+    if (command === "GremmieSays" && contains(data.config.turbolish, message.author.id) && config.fun === "true") { // Lets turbolish users impersonate GSB.
       module.gremmieSays(message);
-    } else if (command === "GremmieSays" && !contains(config.turbolish, message.author.id)) { // If the user doesn't have permissions, tell them!
+    } else if (command === "GremmieSays" && !contains(data.config.turbolish, message.author.id)) { // If the user doesn't have permissions, tell them!
   	  message.channel.send("Sorry, but this command requires TurboLish level GremmieClearance to use.");
   	  message.react("❌"); // Add the reactions, they look cool!
     }
@@ -243,16 +251,15 @@ module.exports = function() {
   },
 
   module.gremmieSeal = function(message) {
-    if (message.mentions.members.first() && sql.get(`SELECT TOP 1 userId FROM products WHERE userId = ${message.mentions.members.first()}`)) // Has a reciepient without a GremmieStats profile been mentioned?
-      sql.run("INSERT INTO scores (userId, gremmiesGiven, gremmiesRecieved, selectedSeal) VALUES (?, ?, ?, ?)", [message.mentions.members.first().id, 0, 0, 0]); // Create a profile for them.
-
+    if (message.mentions.members.first() && sql.get(`SELECT TOP 1 userId FROM scores WHERE userId = ${message.mentions.members.first().id}`)) // Has a reciepient without a GremmieStats profile been mentioned?
 
     var Response = "Here's a freshly baked GremmieSeal (TM) as a thanks for your quality post!"; // Create a string to store the response.
 
     sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => { // Grab the sender's GremmieStats profile.
       if (!row) { // If doesn't exist, create it.
         sql.run("INSERT INTO scores (userId, gremmiesGiven, gremmiesRecieved, selectedSeal) VALUES (?, ?, ?, ?)", [message.author.id, 1, 0, 0]);
-      } else { // If it exists, add a sent point!
+		  console.log(`Created new profile! Sender`);
+	  } else { // If it exists, add a sent point!
         sql.run(`UPDATE scores SET gremmiesGiven = ${row.gremmiesGiven + 1} WHERE userId = ${message.author.id}`);
       }
 
@@ -262,9 +269,9 @@ module.exports = function() {
       sql.run("CREATE TABLE IF NOT EXISTS scores (userId TEXT, gremmiesGiven INTEGER, gremmiesRecieved INTEGER, selectedSeal INTEGER)").then(() => { // Verify the main score table exists.
         sql.run("INSERT INTO scores (userId, gremmiesGiven, gremmiesRecieved, selectedSeal) VALUES (?, ?, ?, ?)", [message.author.id, 1, 0, 0]); // Add the author's profile.
         if (message.mentions.members.first())
-      sql.run(`INSERT INTO scores (userId, gremmiesGiven, gremmiesRecieved, selectedSeal) VALUES (?, ?, ?, ?)", [${message.mentions.members.first().id}, 0, 0, 0]`); // Add the reciepient's profile.
-
-      });
+			sql.run(`INSERT INTO scores (userId, gremmiesGiven, gremmiesRecieved, selectedSeal) VALUES (?, ?, ?, ?)", [${message.mentions.members.first().id}, 0, 0, 0]`); // Add the reciepient's profile.
+			console.log(`Created new profile! Reciepient`);
+		});
     });
 
     if (message.mentions.members.first() != undefined) { //If there is a reciepient, this runs.
@@ -272,10 +279,10 @@ module.exports = function() {
       var Response = "Here's a freshly baked GremmieSeal (TM) as a thanks for your quality post, " + message.mentions.members.first() + "!"; // Add the user's name into the messsage.
 
      sql.get(`SELECT * FROM scores WHERE userId ="${message.mentions.members.first().id}"`).then(row => { // Get the reciepient's page.
-       if (message.mentions.members.first() != undefined) { // If they exist, continue.
+       console.log(message.mentions.members.first().id);
+	   if (message.mentions.members.first() != undefined) { // If they exist, continue.
         if (row === undefined) { // If their page doesn't exist, this runs.
           sql.run("INSERT INTO scores (userId, gremmiesGiven, gremmiesRecieved, selectedSeal) VALUES (?, ?, ?, ?)", [message.mentions.members.first().id, 0, 0, 0]); // Create their page.
-
         }
         sql.run(`UPDATE scores SET gremmiesRecieved = ${row.gremmiesRecieved + 1} WHERE userId = ${message.mentions.members.first().id}`); // Update their page.
         // if (row.gremmiesRecieved >= 20 && !message.mentions.members.first().roles.find("name", "Gremmie Approved")) { // If the reciepient isn't
@@ -294,7 +301,7 @@ module.exports = function() {
 
     var GremmieSig = "GremmieSeal Dispensed - time: " + new Date() + " User: " + message.author.username; // Create a signature to log.
 
-    logAction(GremmieSig); // Log the signature.
+    //logAction(GremmieSig); // Log the signature.
     sql.get(`SELECT * FROM seals WHERE serverID ="${message.channel.guild.id}"`).then(rowSeals => { // Get the server's custom seals.
 
       sql.get(`SELECT * FROM scores WHERE userId ="${message.author.id}"`).then(row => { // Get the sender's stats.
@@ -465,6 +472,15 @@ module.exports = function() {
   function shiftString(toShift, shiftCount) {
 	   return toShift.slice(shiftCount, toShift.length) + toShift.slice(0, shiftCount);
   }
+  
+  function contains(a, obj) { // Checks if an array contains an object. I didn't write this, and can't find who did.
+    for (var i = 0; i < a.length; i++) { // Loop through every index of the array.
+        if (a[i] === obj) { // Does the item we're checking happen to be the one we want?
+            return true; // If so, return true!
+        }
+    }
+    return false; // If the item wasn't found, return.
+}
 
   return module;
 
