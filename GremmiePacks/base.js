@@ -33,7 +33,7 @@ module.exports = function() {
 
   module.name = "base";
   module.desc = "Base GSB functionality";
-  
+
   process.on('unhandledRejection', (reason, p) => {
     console.log(`You done messed up.
 	${reason.stack}`);
@@ -472,7 +472,7 @@ module.exports = function() {
   function shiftString(toShift, shiftCount) {
 	   return toShift.slice(shiftCount, toShift.length) + toShift.slice(0, shiftCount);
   }
-  
+
   function contains(a, obj) { // Checks if an array contains an object. I didn't write this, and can't find who did.
     for (var i = 0; i < a.length; i++) { // Loop through every index of the array.
         if (a[i] === obj) { // Does the item we're checking happen to be the one we want?

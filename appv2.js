@@ -26,7 +26,11 @@ const settings = new Enmap({provider: new Provider({name: "settings"})}); // Enm
 const defaultSettings = { // Settings template for new servers.
   prefix: "!", // The prefix that GSB responds to
   fun: "true", // Is fun mode on?
-  beta: "false" // Is beta mode enabled?
+  beta: "false", // Is beta mode enabled?
+
+  interrogate_role: "banished",
+  interrogate_image: "https://cdn.discordapp.com/attachments/311651922949963777/528335180813828134/meme_police.png"
+
 }
 
 // const userPrefsDefault = { // Soon to be user prefrences template
@@ -457,9 +461,9 @@ client.once('ready', () => {
 
         if (arg == "logAction") // The function to create a GremmieLog
           argsOut.push(logAction);
-		  
-	    if (arg == "config")
-			argsOut.push(config);
+
+  	    if (arg == "config")
+  			argsOut.push(config);
 
         if (arg == "menMessages") // The list of messages GSB will send when mentioned
           argsOut.push(menMessages);
